@@ -31,6 +31,10 @@ public class GameMap {
         public Cell(CellType type) {
             this.type = type;
         }
+
+        public void changeType(CellType cellType){
+            this.type = cellType;
+        }
     }
 
     private Cell[][] map;
@@ -67,21 +71,45 @@ public class GameMap {
                 }
             }
         }
+
+        map[25][25].changeType(CellType.HIVE);
+        map[24][25].changeType(CellType.BEE);
+        map[26][25].changeType(CellType.BEE);
     }
 
     public void render(SpriteBatch batch){
-        //TODO
-
         for(int y = 0; y < mapHeight; y++){
             for(int x = 0; x < mapWidth; x++){
-
-                batch.draw(map[y][x].type.getTexture(), x * GameInfo.SQUARE_SIZE, y * GameInfo.SQUARE_SIZE);
+                batch.draw(map[y][x].type.getTexture(), x * GameInfo.SQUARE_SIZE, y * GameInfo.SQUARE_SIZE, GameInfo.SQUARE_SIZE, GameInfo.SQUARE_SIZE);
             }
         }
-
     }
 
     public void tick(){
         //TODO
+
+        //Pre-game check: Is there at least one hive and two bees?
+        int beeCount = 0;
+        int hiveCount = 0;
+        Cell currentCell;
+
+        for(int y = 0; y < mapHeight; y++){
+            for(int x = 0; x < mapWidth; x++){
+
+                currentCell = map[y][x];
+
+                if(currentCell.type == CellType.BEE)
+                    beeCount++;
+
+                if(currentCell.type == CellType.HIVE)
+                    hiveCount++;
+            }
+        }
+
+        if(beeCount < 2 || hiveCount < 1)
+            throw new IllegalGameStart(beeCount, hiveCount);
+
+        //Queen Rule: Is
+
     }
 }
