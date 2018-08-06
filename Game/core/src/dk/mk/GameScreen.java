@@ -36,7 +36,9 @@ public class GameScreen implements Screen{
             stateTime -= 1;
         }
 
+        game.batch.begin();
         this.map.render(game.batch);
+        game.batch.end();
     }
 
     @Override
