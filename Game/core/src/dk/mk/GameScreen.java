@@ -31,7 +31,7 @@ public class GameScreen implements Screen{
     public void render(float delta) {
         this.stateTime += delta;
 
-        if(stateTime <= 1f){
+        if(stateTime >= 1f){
             this.map.tick();
             stateTime -= 1;
         }
