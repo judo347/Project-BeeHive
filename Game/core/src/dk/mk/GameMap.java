@@ -1,17 +1,25 @@
 package dk.mk;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 
 public class GameMap {
 
     public enum CellType{
 
-        BEE(Color.YELLOW), QUEEN(Color.BROWN), HIVE(Color.GRAY), FLOWER(Color.RED), NOTHING(Color.CHARTREUSE), BORDER(Color.BLACK);
+        BEE("bee.png"), QUEEN("queen.png"), HIVE("hive.png"), FLOWER("flower.png"), BLANK("blank.png"), BORDER("border.png");
 
-        private final Color color;
+        private Texture texture;
 
-        CellType(Color color) {
-            this.color = color;
+        CellType(String imagePath) {
+
+            if(imagePath != null)
+                this.texture = new Texture(imagePath);
+        }
+
+        public Texture getTexture() {
+            return texture;
         }
     }
 
@@ -26,13 +34,21 @@ public class GameMap {
     public GameMap(){
 
         //Initialize map
-        if(GameInfo.WINDOW_HEIGHT % 10 != 0 || GameInfo.WINDOW_WIDTH % 10 != 0)
+        if(GameInfo.WINDOW_HEIGHT % GameInfo.SQUARE_SIZE != 0 || GameInfo.WINDOW_WIDTH % GameInfo.SQUARE_SIZE != 0)
             throw new IllegalMapSize();
         else{
-            this.mapHeight = GameInfo.WINDOW_HEIGHT / 10;
-            this.mapWidth = GameInfo.WINDOW_WIDTH / 10;
+            this.mapHeight = GameInfo.WINDOW_HEIGHT / GameInfo.SQUARE_SIZE;
+            this.mapWidth = GameInfo.WINDOW_WIDTH / GameInfo.SQUARE_SIZE;
         }
 
         map = new Cell[mapHeight][mapWidth];
+    }
+
+    public void render(SpriteBatch batch){
+        //TODO
+    }
+
+    public void tick(){
+        //TODO
     }
 }

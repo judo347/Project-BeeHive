@@ -9,8 +9,11 @@ public class GameScreen implements Screen{
     private World world;
     private GameMap map;
 
+    private float stateTime;
+
     public GameScreen(GdxGame game){
         this.game = game;
+        this.stateTime = 0f;
         initialize();
     }
 
@@ -26,7 +29,14 @@ public class GameScreen implements Screen{
 
     @Override
     public void render(float delta) {
+        this.stateTime += delta;
 
+        if(stateTime <= 1f){
+            this.map.tick();
+            stateTime -= 1;
+        }
+
+        this.map.render(game.batch);
     }
 
     @Override
