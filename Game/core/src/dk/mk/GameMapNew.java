@@ -2,7 +2,6 @@ package dk.mk;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.mk.gameObjects.*;
-import javafx.collections.transformation.SortedList;
 
 import java.util.*;
 
@@ -12,18 +11,29 @@ import java.util.*;
 public class GameMapNew {
 
     public enum Direction{
-        NORTH(0, 1), NORTHEAST(1, 1), EAST(1, 0), SOUTHEAST(1, -1), SOUTH(0, -1), SOUTHWEST(-1, -1), WEST(-1, 0), NORTHWEST(-1, 1);
+        NORTH(0, 1, 0), NORTHEAST(1, 1, 1), EAST(1, 0, 2), SOUTHEAST(1, -1, 3), SOUTH(0, -1, 4), SOUTHWEST(-1, -1, 5), WEST(-1, 0, 6), NORTHWEST(-1, 1, 7);
 
         private int x;
         private int y;
 
-        Direction(int x, int y) {
+        private int transformationValue; //Take the default list times this number to get the desired list.
+
+        Direction(int x, int y, int transformationValue) {
             this.x = x;
             this.y = y;
+            this.transformationValue = transformationValue;
         }
 
         public int[] getDirectionArray(){
             return new int[]{x, y};
+        }
+
+        public int getTransformationValue(){
+            return this.transformationValue;
+        }
+
+        public static LinkedList<Direction> getLinkedList(){
+            return new LinkedList<Direction>(Arrays.asList(Direction.values()));
         }
     }
 
@@ -241,8 +251,7 @@ public class GameMapNew {
 
             if(currentBee.hasPollen()){ //GoTowardsHive
 
-                ArrayList<int[]> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveX(), currentBee.getHiveY(), beeLocation[0], beeLocation[1]); //Get sorted set of next coordinates
-
+                LinkedList<int[]> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveX(), currentBee.getHiveY(), beeLocation[0], beeLocation[1]); //Get sorted set of next coordinates
 
                 for(int i = 0; i < 8; i++){
 
@@ -250,8 +259,6 @@ public class GameMapNew {
 
                     if(map[coordinate[1]][coordinate[0]] instanceof GameStructure){
                         if(!((GameStructure) map[coordinate[1]][coordinate[0]]).isSolid()){
-
-
 
                             //MOVE
                             map[coordinate[1]][coordinate[0]] = new Bee(((Bee)map[beeLocation[1]][beeLocation[0]]).getHiveX(), ((Bee)map[beeLocation[1]][beeLocation[0]]).getHiveY());
@@ -264,20 +271,6 @@ public class GameMapNew {
 
 
                 }
-
-                /*
-                //Move to the first empty coordinate
-                for (int[] coordinate : coordinates) {
-                    if(map[coordinate[1]][coordinate[0]] instanceof GameStructure){
-                        if(!((GameStructure) map[coordinate[1]][coordinate[0]]).isSolid()){
-
-                            //MOVE
-                            map[coordinate[1]][coordinate[0]] = new Bee(((Bee)map[beeLocation[1]][beeLocation[0]]).getHiveX(), ((Bee)map[beeLocation[1]][beeLocation[0]]).getHiveY());
-                            map[beeLocation[1]][beeLocation[0]] = new GameStructure(false);
-                            break;
-                        }
-                    }
-                }*/
             }else{ //GoAwayFromHive
 
             }
@@ -286,29 +279,13 @@ public class GameMapNew {
 
 
     /** */
-    private ArrayList<int[]> getSortedSetOfDirectionalCoordinates(int destX, int destY, int myX, int myY){
-
-        //TreeSet<int[]> directionalList = new TreeSet<int[]>(); //TODO SHOULD USE SORTED SOMETHING!
-        ArrayList<int[]> directionalList = new ArrayList<int[]>(); //TODO SHOULD USE SORTED SOMETHING!
-
-        HashMap<Integer, Integer[]> directionalMap = new HashMap<Integer, Integer[]>();
+    private LinkedList<int[]> getSortedSetOfDirectionalCoordinates(int destX, int destY, int myX, int myY){
 
         int xDifference =  destX - myX;
         int yDifference =  destY - myY;
 
         xDifference = (xDifference == 0) ? 0 : (xDifference < 0) ? -1 : 1; //Reduce to -1, 0, 1
         yDifference = (yDifference == 0) ? 0 : (yDifference < 0) ? -1 : 1; //Reduce to -1, 0, 1
-
-        ArrayList<Direction> directions = new ArrayList<Direction>(Arrays.asList(Direction.values()));
-
-        /* TODO OPTIMIZE!
-        for(Direction direction : directions){
-
-            if(direction.x == xDifference && direction.y == yDifference){
-                directionalMap.put(0, new Integer[]{myX + xDifference, myY + yDifference});
-
-            } else if(direction.x == xDifference)
-        }*/
 
         Direction firstDirection = null;
 
@@ -318,99 +295,30 @@ public class GameMapNew {
                 firstDirection = direction;
         }
 
-        switch (firstDirection){
+        LinkedList<Direction> directionLinkedList = Direction.getLinkedList();
 
-            case NORTH:     directionalList.add(Direction.NORTH.getDirectionArray());
-                            directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            directionalList.add(Direction.EAST.getDirectionArray());
-                            directionalList.add(Direction.WEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTH.getDirectionArray());
-                            break;
-
-            case NORTHEAST: directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            directionalList.add(Direction.EAST.getDirectionArray());
-                            directionalList.add(Direction.NORTH.getDirectionArray());
-                            directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTH.getDirectionArray());
-                            directionalList.add(Direction.WEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            break;
-
-            case EAST:      directionalList.add(Direction.EAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTH.getDirectionArray());
-                            directionalList.add(Direction.NORTH.getDirectionArray());
-                            directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            directionalList.add(Direction.WEST.getDirectionArray());
-                            break;
-
-            case SOUTHEAST: directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTH.getDirectionArray());
-                            directionalList.add(Direction.EAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            directionalList.add(Direction.WEST.getDirectionArray());
-                            directionalList.add(Direction.NORTH.getDirectionArray());
-                            directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            break;
-
-            case SOUTH:     directionalList.add(Direction.SOUTH.getDirectionArray());
-                            directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            directionalList.add(Direction.WEST.getDirectionArray());
-                            directionalList.add(Direction.EAST.getDirectionArray());
-                            directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            directionalList.add(Direction.NORTH.getDirectionArray());
-                            break;
-
-            case SOUTHWEST: directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            directionalList.add(Direction.WEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTH.getDirectionArray());
-                            directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            directionalList.add(Direction.NORTH.getDirectionArray());
-                            directionalList.add(Direction.EAST.getDirectionArray());
-                            directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            break;
-
-            case WEST:      directionalList.add(Direction.WEST.getDirectionArray());
-                            directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            directionalList.add(Direction.NORTH.getDirectionArray());
-                            directionalList.add(Direction.SOUTH.getDirectionArray());
-                            directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            directionalList.add(Direction.EAST.getDirectionArray());
-                            break;
-
-            case NORTHWEST: directionalList.add(Direction.NORTHWEST.getDirectionArray());
-                            directionalList.add(Direction.NORTH.getDirectionArray());
-                            directionalList.add(Direction.WEST.getDirectionArray());
-                            directionalList.add(Direction.NORTHEAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTHWEST.getDirectionArray());
-                            directionalList.add(Direction.EAST.getDirectionArray());
-                            directionalList.add(Direction.SOUTH.getDirectionArray());
-                            directionalList.add(Direction.SOUTHEAST.getDirectionArray());
-                            break;
+        //Cycles through the list untill firstDirection is first in list
+        while(firstDirection != directionLinkedList.peek()){
+            directionLinkedList.addLast(directionLinkedList.poll());
         }
 
-        return convertRelativeToMyPos(directionalList, myX, myY);
+        return convertRelativeToMyPos(directionLinkedList, myX, myY);
     }
 
-    private ArrayList<int[]> convertRelativeToMyPos(ArrayList<int[]> list, int myX, int myY){
+    private LinkedList<int[]> convertRelativeToMyPos(LinkedList<Direction> list, int myX, int myY){
 
-        for(int i = 0; i < list.size(); i++){
-            list.set(i, new int[]{list.get(i)[0] + myX, list.get(i)[1] + myY});
+        LinkedList<int[]> listInt = new LinkedList<int[]>();
+
+        for (Direction direction : list) {
+            listInt.addLast(direction.getDirectionArray());
         }
 
-        return list;
+        for (int[] ints : listInt) {
+            ints[0] = ints[0] + myX;
+            ints[1] = ints[1] + myY;
+        }
+
+        return listInt;
     }
 
     private ArrayList<Bee> getBeesAroundGameObject(GameObject gameObject, int x, int y){
