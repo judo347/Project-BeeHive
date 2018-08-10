@@ -7,7 +7,7 @@ public class GameScreen implements Screen{
 
     private GdxGame game;
     private World world;
-    private GameMap map;
+    private GameMapNew map;
 
     private float stateTime;
 
@@ -19,7 +19,7 @@ public class GameScreen implements Screen{
 
     private void initialize(){
         //this.world = new World(new Vector2(0,-9.8f), true); //Creating a world with gravity, true allows sleep = Dont calculate when nothing happens to elements.
-        this.map = new GameMap();
+        this.map = new GameMapNew();
     }
 
     @Override

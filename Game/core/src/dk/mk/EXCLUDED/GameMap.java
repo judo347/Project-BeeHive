@@ -28,9 +28,8 @@ public class GameMap {
     private class Cell{
 
         private CellType type;
-        //TODO maybe coords is needed?
 
-        public Cell(CellType type) {
+        public Cell(CellType type, int x, int y) {
             this.type = type;
         }
 
@@ -113,11 +112,8 @@ public class GameMap {
 
         preGameCheck();
         queenRuleCheck();
+        harvestRuleCheck();
 
-        //Harvest rule: If the hive contains a queen, then the bee will choose a random direction and
-        //start searching for a flower. When found the bee will harvest it, and return to the hive.
-
-        //If contains queen, fly in psudo random direction
 
 
         //System.out.println("Hives " + hives.size());
@@ -179,6 +175,36 @@ public class GameMap {
                 }
             }
         }
+    }
+
+    private void harvestRuleCheck(){
+
+        //Harvest rule: If the hive contains a queen, then the bee will choose a random direction and
+        //start searching for a flower. When found the bee will harvest it, and return to the hive.
+
+        //If contains queen, fly in psudo random direction
+
+        //Find hive locations
+        ArrayList<int[]> hiveLocations = getHiveLocations();
+
+        //
+
+    }
+
+    /** Searches the map and returns the coordinates for the hives. */
+    private ArrayList<int[]> getHiveLocations(){
+
+        ArrayList<int[]> hiveLocations = new ArrayList<int[]>();
+
+        for(int y = 0; y < mapHeight; y++){
+            for(int x = 0; x < mapWidth; x++){
+
+                if(map[y][x].type == CellType.HIVE)
+                    hiveLocations.add(new int[]{x, y});
+            }
+        }
+
+        return hiveLocations;
     }
 
     /** Checks the surrounding tiles of a position for a specific type.
