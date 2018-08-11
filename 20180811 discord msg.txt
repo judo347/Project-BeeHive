@@ -1,0 +1,13 @@
+Hey! :D Jeg håber at i også nyder ferien!
+
+For en lille uge siden begyndte jeg på et nyt programmerings-projekt og syntes ikke at i skulle gå glip af det!
+Jeg endte med at se en del videoer om bier og syntes de var ret fasinerende... og sådan startede ideen.
+Programmet er en "simulering" af bier og deres liv. Udgangspunktet er regler: Hvis et hive ikke har en dronning og der er to bier i nærheden, så lav en dronning. Hvis en bi uden pollen er ved et hive, så bevæger den sig væk fra hive. osv.
+Under dette post er der et par GIFS af spillet :D Et fra starten af spillet og et efter noget tid.
+
+BLACK = Hive, Q = Queen, YELLOW = Bee without pollen, ORANGE = Bee with pollen, FLOWER = FLOWER.
+Skrevet i Java med hjælp af LibGdx. Koden ligger på mit Git under navnet Project-BeeHive - det er langt fra cleancode, endnu!
+
+GIFS
+
+Ow! Og projektet er ikke færdigt.. der mangler stadig en del adfærd. Såsom at når et hive har x antal bier laver de en ny dronning og deler flokken af bier for at finde et nyt hjem :smiley:
