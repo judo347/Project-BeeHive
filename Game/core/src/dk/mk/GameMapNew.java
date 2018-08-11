@@ -8,32 +8,37 @@ import java.util.*;
 
 //TODO Maybe use own defines int[].. so it only and always have two slots for coordinates
 
+//TODO bee should "Bouce" on walls. MIssing feature: new queen find new place to live.
+
 public class GameMapNew {
 
     public enum Direction{
-        NORTH(0, 1, 0), NORTHEAST(1, 1, 1), EAST(1, 0, 2), SOUTHEAST(1, -1, 3), SOUTH(0, -1, 4), SOUTHWEST(-1, -1, 5), WEST(-1, 0, 6), NORTHWEST(-1, 1, 7);
+        NORTH(0, 1), NORTHEAST(1, 1), EAST(1, 0), SOUTHEAST(1, -1), SOUTH(0, -1), SOUTHWEST(-1, -1), WEST(-1, 0), NORTHWEST(-1, 1);
 
         private int x;
         private int y;
 
-        private int transformationValue; //Take the default list times this number to get the desired list.
-
-        Direction(int x, int y, int transformationValue) {
+        Direction(int x, int y) {
             this.x = x;
             this.y = y;
-            this.transformationValue = transformationValue;
         }
 
         public int[] getDirectionArray(){
             return new int[]{x, y};
         }
 
-        public int getTransformationValue(){
-            return this.transformationValue;
-        }
-
         public static LinkedList<Direction> getLinkedList(){
             return new LinkedList<Direction>(Arrays.asList(Direction.values()));
+        }
+
+        public Direction findOppositeDirection(){
+
+            for(Direction newDirection : Direction.values()){
+                if((newDirection.x * -1) == this.x && (newDirection.y * -1) == this.y)
+                    return newDirection;
+            }
+
+            return null; //Should not get here
         }
     }
 
@@ -239,11 +244,11 @@ public class GameMapNew {
 
 
         //AT THIS POINT: BEES HAVE GIVEN OR RECEIVED POLLEN; ITS NOW TIME TO MOVE;
-        moveBees(beeLocations);
+        moveBees(beeLocations, flowerLocations);
 
     }
 
-    private void moveBees(ArrayList<int[]> beesLocations){
+    private void moveBees(ArrayList<int[]> beesLocations, ArrayList<int[]> flowerLocations){
 
         for(int[] beeLocation : beesLocations){
 
@@ -261,7 +266,7 @@ public class GameMapNew {
                 //    System.out.println(ints[0] + " " + ints[1]);
                 //}
 
-                for(int i = 0; i < 8; i++){
+                for(int i = 0; i < 7; i++){
 
                     int[] coordinate = coordinates.get(i);
 
@@ -271,34 +276,109 @@ public class GameMapNew {
                 }
             }else{ //GoAwayFromHive
 
+                //currentBee;
+                //beeLocation;
 
+                //If the bees currentHuntDirection is not set. Give it one
+                if(currentBee.getCurrentHuntDirection() == null)
+                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(currentBee.getHiveX(), currentBee.getHiveY(), beeLocation[0], beeLocation[1]).findOppositeDirection());//Calculate the direction away from hive, give that to the bee
 
+                //If bee is # moves from flower, set direction to that way //TODO Might need to be set to a higher number
+                int[] nearestFlower = isBeeNearFlower(beeLocation, flowerLocations, Bee.BEE_FLOWER_ALERT_DIST);
 
+                if(nearestFlower != null)
+                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(nearestFlower[0], nearestFlower[1], beeLocation[0], beeLocation[1])); //Get direction of flower, and set that to the be the bees direction
+
+                //move in that direction if possible, or continues on list
+                //Get list of directions in bees desired direction
+                LinkedList<int[]> coordinates = getSortedSetOfDirectionalCoordinates(beeLocation[0] + currentBee.getCurrentHuntDirection().x, beeLocation[1] + currentBee.getCurrentHuntDirection().y, beeLocation[0], beeLocation[1]);
+
+                for(int i = 0; i < 7; i++){
+
+                    int[] coordinate = coordinates.get(i);
+
+                    if(moveBee(new int[]{beeLocation[0], beeLocation[1]}, new int[]{coordinate[0], coordinate[1]}))
+                        break;
+
+                }
             }
         }
+    }
+
+    /** Find the coordinates of the closest flower.
+     * @param beeLocation the coordinates of the bee
+     * @param flowersLocations ArrayList with coordinates of all flowers
+     * @param maxDist max allowed dist to flowers
+     * @return finds the closest flower within reach (maxDist), or null if non is found. */ //TODO MIGHT CONTAIN BUGS!!
+    private int[] isBeeNearFlower(int[] beeLocation, ArrayList<int[]> flowersLocations, int maxDist){
+
+        ArrayList<double[]> inReachFlowers = new ArrayList<double[]>();
+
+        for(int[] ints : flowersLocations){
+
+            //Calculate distance from bee to flower
+            int xDiff = Math.abs(ints[0] - beeLocation[0]);
+            int yDiff = Math.abs(ints[1] - beeLocation[1]);
+
+            //Create list of flowers within reach, less or equal to maxDist
+            //Get list of flowers in reach
+            if(xDiff <= maxDist && yDiff <= maxDist){
+                double distance = Math.sqrt(Math.pow(ints[0], 2) + Math.pow(ints[1], 2)); //Calculate distance in double
+                inReachFlowers.add(new double[]{ints[0], ints[1], distance}); //Save the distance with the valid flower
+            }
+        }
+
+        //If size of list is not 0, then find the closest flower
+        if(inReachFlowers.size() > 0){
+
+            //double[] closestFlower = new double[]{inReachFlowers.get(0)[0], inReachFlowers.get(0)[1], inReachFlowers.get(0)[2]};
+            double[] closestFlower = inReachFlowers.get(0);
+
+            //Does array contain more than 1? Else return that one
+            if(inReachFlowers.size() > 2){
+
+                //Search for the closest one
+                for(int i = 1; i < inReachFlowers.size(); i++){
+
+                    //If closer flower is found, save that one
+                    if(inReachFlowers.get(i)[2] < closestFlower[2])
+                        closestFlower = inReachFlowers.get(i);
+                }
+
+            }
+
+
+            return new int[]{(int)closestFlower[0], (int)closestFlower[1]};
+        }
+
+        return null;
     }
 
     /** Moves the bee. Return true if bee was moved. */
     private boolean moveBee(int[] myCoords, int[] destCoords){
 
-        if(map[destCoords[1]][destCoords[0]] instanceof GameStructure){
-            if(!((GameStructure) map[destCoords[1]][destCoords[0]]).isSolid()){
+        try{
+            if(map[destCoords[1]][destCoords[0]] instanceof GameStructure){
+                if(!((GameStructure) map[destCoords[1]][destCoords[0]]).isSolid()){
 
-                //MOVE
-                map[destCoords[1]][destCoords[0]] = new Bee(((Bee)map[myCoords[1]][myCoords[0]]).getHiveX(), ((Bee)map[myCoords[1]][myCoords[0]]).getHiveY());
-                if(((Bee)map[myCoords[1]][myCoords[0]]).hasPollen()) //Keep pollen state
-                    ((Bee)map[destCoords[1]][destCoords[0]]).givePollen();
-                map[myCoords[1]][myCoords[0]] = new GameStructure(false); //Delete old bee
+                    //MOVE
+                    map[destCoords[1]][destCoords[0]] = new Bee(((Bee)map[myCoords[1]][myCoords[0]]).getHiveX(), ((Bee)map[myCoords[1]][myCoords[0]]).getHiveY());
+                    if(((Bee)map[myCoords[1]][myCoords[0]]).hasPollen()) //Keep pollen state
+                        ((Bee)map[destCoords[1]][destCoords[0]]).givePollen();
+                    map[myCoords[1]][myCoords[0]] = new GameStructure(false); //Delete old bee
 
-                return true;
+                    return true;
+                }
             }
+        }catch (ArrayIndexOutOfBoundsException e){
+            return false;
         }
 
         return false;
     }
 
-    /** */
-    private LinkedList<int[]> getSortedSetOfDirectionalCoordinates(int destX, int destY, int myX, int myY){
+    /** Finds a direction from myCoords to destCoords. */
+    private Direction findDirectionFromCoords(int destX, int destY, int myX, int myY){
 
         int xDifference =  destX - myX;
         int yDifference =  destY - myY;
@@ -313,6 +393,15 @@ public class GameMapNew {
             if(direction.x == xDifference && direction.y == yDifference)
                 firstDirection = direction;
         }
+
+        return firstDirection;
+    }
+
+    /** */
+    private LinkedList<int[]> getSortedSetOfDirectionalCoordinates(int destX, int destY, int myX, int myY){
+
+        //Find the first direction
+        Direction firstDirection = findDirectionFromCoords(destX, destY, myX, myY);
 
         LinkedList<Direction> directionLinkedList = Direction.getLinkedList();
 

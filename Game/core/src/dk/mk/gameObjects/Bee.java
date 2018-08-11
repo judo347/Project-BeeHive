@@ -1,6 +1,7 @@
 package dk.mk.gameObjects;
 
 import com.badlogic.gdx.graphics.Texture;
+import dk.mk.GameMapNew;
 
 public class Bee extends GameObject {
 
@@ -11,6 +12,10 @@ public class Bee extends GameObject {
     private int hiveX;
     private int hiveY;
 
+    private GameMapNew.Direction currentHuntDirection;
+
+    public static final int BEE_FLOWER_ALERT_DIST = 10;
+
     public Bee(int hiveX, int hiveY) {
         super("beeNoPollen.png");
         this.hiveX = hiveX;
@@ -20,6 +25,8 @@ public class Bee extends GameObject {
         this.noPollenTexture = new Texture("beeNoPollen.png");
 
         this.hasPollen = false;
+
+        this.currentHuntDirection = null;
     }
 
     public int getHiveX() {
@@ -40,6 +47,15 @@ public class Bee extends GameObject {
 
     public void removePollen(){
         this.hasPollen = false;
+        this.currentHuntDirection = null; //Reset direction when pollen is harvested = it found home
+    }
+
+    public GameMapNew.Direction getCurrentHuntDirection() {
+        return currentHuntDirection;
+    }
+
+    public void setCurrentHuntDirection(GameMapNew.Direction currentHuntDirection) {
+        this.currentHuntDirection = currentHuntDirection;
     }
 
     @Override
