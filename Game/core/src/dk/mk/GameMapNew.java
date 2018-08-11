@@ -253,30 +253,49 @@ public class GameMapNew {
 
                 LinkedList<int[]> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveX(), currentBee.getHiveY(), beeLocation[0], beeLocation[1]); //Get sorted set of next coordinates
 
+                //System.out.println(beeLocation[0] + " " + beeLocation[1]);
+                //System.out.println(currentBee.getHiveX() + " " + currentBee.getHiveY());
+                //System.out.println("");
+
+                //for(int[] ints : coordinates){
+                //    System.out.println(ints[0] + " " + ints[1]);
+                //}
+
                 for(int i = 0; i < 8; i++){
 
                     int[] coordinate = coordinates.get(i);
 
-                    if(map[coordinate[1]][coordinate[0]] instanceof GameStructure){
-                        if(!((GameStructure) map[coordinate[1]][coordinate[0]]).isSolid()){
-
-                            //MOVE
-                            map[coordinate[1]][coordinate[0]] = new Bee(((Bee)map[beeLocation[1]][beeLocation[0]]).getHiveX(), ((Bee)map[beeLocation[1]][beeLocation[0]]).getHiveY());
-                            if(((Bee)map[beeLocation[1]][beeLocation[0]]).hasPollen()) //Keep pollen state
-                                ((Bee)map[coordinate[1]][coordinate[0]]).givePollen();
-                            map[beeLocation[1]][beeLocation[0]] = new GameStructure(false); //Delete old bee
-                            break;
-                        }
-                    }
-
+                    if(moveBee(new int[]{beeLocation[0], beeLocation[1]}, new int[]{coordinate[0], coordinate[1]}))
+                        break;
 
                 }
             }else{ //GoAwayFromHive
+
+
+
 
             }
         }
     }
 
+    /** Moves the bee. Return true if bee was moved. */
+    private boolean moveBee(int[] myCoords, int[] destCoords){
+
+        if(map[destCoords[1]][destCoords[0]] instanceof GameStructure){
+            if(!((GameStructure) map[destCoords[1]][destCoords[0]]).isSolid()){
+
+                //MOVE
+                map[destCoords[1]][destCoords[0]] = new Bee(((Bee)map[myCoords[1]][myCoords[0]]).getHiveX(), ((Bee)map[myCoords[1]][myCoords[0]]).getHiveY());
+                if(((Bee)map[myCoords[1]][myCoords[0]]).hasPollen()) //Keep pollen state
+                    ((Bee)map[destCoords[1]][destCoords[0]]).givePollen();
+                map[myCoords[1]][myCoords[0]] = new GameStructure(false); //Delete old bee
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /** */
     private LinkedList<int[]> getSortedSetOfDirectionalCoordinates(int destX, int destY, int myX, int myY){
@@ -302,7 +321,15 @@ public class GameMapNew {
             directionLinkedList.addLast(directionLinkedList.poll());
         }
 
-        return convertRelativeToMyPos(directionLinkedList, myX, myY);
+        //Convert list to have the right order
+        LinkedList<Direction> directionLinkedListOrdered = new LinkedList<Direction>();
+
+        while(directionLinkedList.size() > 0){
+            directionLinkedListOrdered.add(directionLinkedList.pollFirst());
+            directionLinkedListOrdered.add(directionLinkedList.pollLast());
+        }
+
+        return convertRelativeToMyPos(directionLinkedListOrdered, myX, myY);
     }
 
     private LinkedList<int[]> convertRelativeToMyPos(LinkedList<Direction> list, int myX, int myY){
