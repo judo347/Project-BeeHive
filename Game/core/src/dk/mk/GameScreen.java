@@ -31,9 +31,9 @@ public class GameScreen implements Screen{
     public void render(float delta) {
         this.stateTime += delta;
 
-        if(stateTime >= 1f){
+        if(stateTime >= 1f){  //TODO These two places to change pace of ticks/game
             this.map.tick();
-            stateTime -= 1;
+            stateTime -= 1; //TODO These two places to change pace of ticks/game
         }
 
         game.batch.begin();
