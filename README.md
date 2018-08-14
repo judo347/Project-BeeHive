@@ -1,4 +1,6 @@
-A visual simulation of bees in the style of the Game of Life. The project is written in Java with the support from the framework <a href="https://libgdx.badlogicgames.com/">LibGdx</a>.
+A visual simulation of bees in the style of John Conways <a href="https://bitstorm.org/gameoflife/">Game of Life</a>. The project is written in Java with the support from the framework <a href="https://libgdx.badlogicgames.com/">LibGdx</a>.
+
+
 
 ### Elemtents and Concept ###
 
