@@ -34,3 +34,5 @@ OOO: After a preset distance from the other hive. Not ontop of flowers.
 
 
 ### INSERT OTHER GIFS ###
+
+BLACK = Hive, Q = Queen, YELLOW = Bee without pollen, ORANGE = Bee with pollen, FLOWER = FLOWER.
