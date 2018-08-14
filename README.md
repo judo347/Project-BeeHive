@@ -11,6 +11,7 @@ The concept is to simulate a bee hive with bees and neaby flowers. The bees will
 Queen rule: If two bees is near a hive, and there is no queen on the way or present, 
 they will start creating a new queen. 
 OOO: This does not require any resources.
+![GIF Queen Rule](/GIFS/README/queenRule.gif)
 
 Harvest rule: If the hive contains a queen, then the bee will choose a random direction and 
 start searching for a flower. When found the bee will harvest it, and return to the hive.
