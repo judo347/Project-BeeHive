@@ -3,6 +3,8 @@ package dk.mk;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.World;
 
+import static dk.mk.GameInfo.TICK_DURATION;
+
 public class GameScreen implements Screen{
 
     private GdxGame game;
@@ -31,9 +33,9 @@ public class GameScreen implements Screen{
     public void render(float delta) {
         this.stateTime += delta;
 
-        if(stateTime >= 1f){  //TODO These two places to change pace of ticks/game
+        if(stateTime >= TICK_DURATION){
             this.map.tick();
-            stateTime -= 1; //TODO These two places to change pace of ticks/game
+            stateTime -= TICK_DURATION;
         }
 
         game.batch.begin();

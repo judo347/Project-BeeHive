@@ -78,34 +78,7 @@ public class GameMapNew {
             }
         }
 
-        testSpawn();
-    }
-
-    private void testSpawn(){
-
-        //Hive one
-        map[25][25] = new Hive();
-        map[24][25] = new Bee(25, 25);
-        map[26][25] = new Bee(25,25);
-        ((Bee)map[26][25]).givePollen();
-
-
-        //Hive two
-        map[70][70] = new Hive();
-        map[71][70] = new Bee(70,70);
-        map[71][71] = new Bee(70,70);
-        map[70][71] = new Bee(70,70);
-
-        //Flowers
-        map[4][4] = new Flower();
-        map[5][4] = new Flower();
-        map[12][30] = new Flower();
-        map[6][23] = new Flower();
-        map[22][4] = new Flower();
-        map[32][32] = new Flower();
-        map[74][32] = new Flower();
-        map[32][74] = new Flower();
-        map[32][75] = new Bee(70,70);
+        SpawnMethods.testSpawn(map);
     }
 
     public void render(SpriteBatch batch){
@@ -118,6 +91,7 @@ public class GameMapNew {
 
     public void tick(){
 
+        //TODO IMPROVEMENT: Only one rule per tick. So you cannot spawn a queen and move at the same tick.
         preGameCheck();
         queenRuleCheck();
         harvestRuleCheck();
