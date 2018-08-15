@@ -121,16 +121,15 @@ public class GameMap {
             throw new IllegalGameStart(beeCount, hiveCount);
     }
 
-
+    /** Queen rule check: if there is two or more bees near a hive and
+     *  there is no queen on the way or present at hive. Then create one. */
     private void queenRuleCheck(){
-        //Queen Rule: If two bees is near a hive, and there is no queen on the way or present,
-        //they will start creating a new queen. //TODO ATM NO TIME TO CREATE
-
-        //Find POS of hives.
+        //TODO add creation time?
 
         ArrayList<Vector2> hives = new ArrayList<Vector2>();
         GameObject currentCell;
 
+        //Find coordinates of hives. Searches the map and saves the cells that are hives.
         for(int y = 0; y < mapHeight; y++){
             for(int x = 0; x < mapWidth; x++){
 
@@ -141,105 +140,93 @@ public class GameMap {
             }
         }
 
+        //Check hives for queen. If no = spawn queen.
         for(Vector2 hive : hives){
             if(checkSurroundings(new Queen(), hive) == 0){ //Check if there is no queen around the hive
-
-                //System.out.println("There is no queen!");
-
-                if(checkSurroundings(new Bee(0,0), hive) >= 2){ //Check if there is two bees near hive
-
-                    //System.out.println("There are at least two bees!");
-
-                    Vector2 emptyCell = findEmptyCell(hive);  //Spawn queen on empty spot
-                    map[emptyCell.y][emptyCell.x] = new Queen();
+                if(checkSurroundings(new Bee(0,0), hive) >= 2){ //Check if there is at least two bees near hive
+                    Vector2 emptyCell = findEmptyCell(hive);  //Find empty cell
+                    map[emptyCell.y][emptyCell.x] = new Queen(); //Spawn queen in empty cell
                 }
             }
         }
     }
 
-    /** Checks if a bee near a hive has pollen. If true remove pollen and spawn new bee. */
+    //TODO Optimize so that the map has a list of the hives and such..
+    /** Harvest rule check: if the hive contains a queen, then the bee will choose a psudo random direction and
+     *  start searching for a flower. When found the bee will harvest it, and return to the hive*/
+    private void harvestRuleCheck(){
+
+        ArrayList<Vector2> hiveLocations = getGameObjectLocations(new Hive()); //Find hive locations
+        ArrayList<Vector2> flowerLocations = getGameObjectLocations(new Flower()); //Find flower locations
+        ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0)); //Find bee locations
+
+        //Does bees near hive have pollen? Then spawn new bee.
+        isBeeWithPollenNearHiveEqualsSpawn(hiveLocations);
+
+        //Is bee near flower? Give bee pollen.
+        isBeeWithPollenNearFlowerGivePollen(flowerLocations);
+
+        //AT THIS POINT: BEES HAVE GIVEN OR RECEIVED POLLEN. ITS NOW TIME TO MOVE.
+        moveBees(beeLocations, flowerLocations);
+    }
+
+    /** Checks if a bee near a hive has pollen. If true remove pollen and spawn new bee.
+     *  @param hiveLocations an arrayList containing hive locations. */
     private void isBeeWithPollenNearHiveEqualsSpawn(ArrayList<Vector2> hiveLocations){
 
-        for(Vector2 coords : hiveLocations){
-            ArrayList<Bee> beesAroundHive = getBeesAroundGameObject(new Hive(), coords.x, coords.y);
+        for(Vector2 hiveCoords : hiveLocations){
+            ArrayList<Bee> beesAroundHive = getBeesAroundGameObject(new Hive(), hiveCoords); //Get arrayList of bees around current hive
 
-            //System.out.println(beesAroundHive.size());
-
+            //Check all bees around the current hive for pollen.
             for(Bee bee : beesAroundHive){
-                if(bee.hasPollen()){
+                if(bee.hasPollen()){ //If the bee has pollen. Spawn new bee in empty cell;
+
                     //Spawn new bee at hive
-                    Vector2 emptyLocation = findEmptyCell(coords);
-                    map[emptyLocation.y][emptyLocation.x] = new Bee(coords.x, coords.y);
+                    Vector2 emptyLocation = findEmptyCell(hiveCoords);
+                    map[emptyLocation.y][emptyLocation.x] = new Bee(hiveCoords.x, hiveCoords.y);
 
                     //Remove pollen from bee
                     bee.removePollen();
                 }
             }
-
         }
     }
 
-    /** Checks if a bee near a flower. If true give pollen to bee. */
+    /** Checks if a bee is near a flower. If true give pollen to bee.
+     *  @param flowerLocations an arrayList containing flower locations. */
     private void isBeeWithPollenNearFlowerGivePollen(ArrayList<Vector2> flowerLocations){
 
-        for(Vector2 coords : flowerLocations){
-            ArrayList<Bee> beesAroundFlower = getBeesAroundGameObject(new Bee(0,0), coords.x, coords.y);
+        for(Vector2 flowerCoords : flowerLocations){
+            ArrayList<Bee> beesAroundFlower = getBeesAroundGameObject(new Bee(0,0), flowerCoords); //Get bees around flower.
 
+            //Give pollen to all bees around current flower.
             for(Bee bee : beesAroundFlower){
                 bee.givePollen();
             }
         }
     }
 
-    //TODO Optimize so that the map has a list of the hives and such..
-    private void harvestRuleCheck(){
-
-        //Harvest rule: If the hive contains a queen, then the bee will choose a random direction and
-        //start searching for a flower. When found the bee will harvest it, and return to the hive.
-
-        //If contains queen, fly in psudo random direction
-
-        ArrayList<Vector2> hiveLocations = getGameObjectLocations(new Hive()); //Find hive locations
-        ArrayList<Vector2> flowerLocations = getGameObjectLocations(new Flower()); //Find flowers
-        ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0));
-
-        //Does bees near hive have pollen? then spawn new bee
-        isBeeWithPollenNearHiveEqualsSpawn(hiveLocations);
-
-        //Is bee near flower? Give pollen
-        isBeeWithPollenNearFlowerGivePollen(flowerLocations);
-
-
-        //AT THIS POINT: BEES HAVE GIVEN OR RECEIVED POLLEN; ITS NOW TIME TO MOVE;
-        moveBees(beeLocations, flowerLocations);
-
-    }
-
+    /**
+     *  @param beesLocations an arrayList containing all bee locations.
+     *  @param flowerLocations an arrayList containing all flower locations. */
     private void moveBees(ArrayList<Vector2> beesLocations, ArrayList<Vector2> flowerLocations){
 
         for(Vector2 beeLocation : beesLocations){
 
             Bee currentBee = (Bee)map[beeLocation.y][beeLocation.x];
 
-            if(currentBee.hasPollen()){ //GoTowardsHive
+            if(currentBee.hasPollen()){ //If bee has pollen. Then GoTowardsHive
 
-                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveCoordinates(), beeLocation); //Get sorted set of next coordinates
+                //Get sorted linkedList of next coordinates and all eight directions.
+                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveCoordinates(), beeLocation);
 
-                //System.out.println(beeLocation[0] + " " + beeLocation[1]);
-                //System.out.println(currentBee.getHiveX() + " " + currentBee.getHiveY());
-                //System.out.println("");
-
-                //for(int[] ints : coordinates){
-                //    System.out.println(ints[0] + " " + ints[1]);
-                //}
-
+                //Check all 8 directions and take the first available one (first empty cell)
                 for(int i = 0; i < 7; i++){
 
                     Vector2 coordinate = coordinates.get(i);
 
                     if(moveBee(new Vector2(beeLocation), new Vector2(coordinate)))
                         break;
-
                 }
             }else{ //GoAwayFromHive
 
@@ -407,9 +394,11 @@ public class GameMap {
         return listInt;
     }
 
-    private ArrayList<Bee> getBeesAroundGameObject(GameObject gameObject, int x, int y){
+    private ArrayList<Bee> getBeesAroundGameObject(GameObject gameObject, Vector2 coordinates){
 
         ArrayList<Bee> bees = new ArrayList<Bee>();
+        int x = coordinates.x;
+        int y = coordinates.y;
 
         if(map[y+1][x].getClass() == Bee.class)
             bees.add((Bee)map[y+1][x]);
