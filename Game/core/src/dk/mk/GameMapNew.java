@@ -5,7 +5,6 @@ import dk.mk.gameObjects.*;
 
 import java.util.*;
 
-
 //TODO Maybe use own defines int[].. so it only and always have two slots for coordinates
 
 //TODO bee should "Bouce" on walls. MIssing feature: new queen find new place to live.
@@ -15,16 +14,14 @@ public class GameMapNew {
     public enum Direction{
         NORTH(0, 1), NORTHEAST(1, 1), EAST(1, 0), SOUTHEAST(1, -1), SOUTH(0, -1), SOUTHWEST(-1, -1), WEST(-1, 0), NORTHWEST(-1, 1);
 
-        private int x;
-        private int y;
+        private Vector2 coordinates;
 
         Direction(int x, int y) {
-            this.x = x;
-            this.y = y;
+            this.coordinates = new Vector2(x, y);
         }
 
-        public int[] getDirectionArray(){
-            return new int[]{x, y};
+        public Vector2 getCoordinates() {
+            return new Vector2(coordinates);
         }
 
         public static LinkedList<Direction> getLinkedList(){
@@ -34,7 +31,7 @@ public class GameMapNew {
         public Direction findOppositeDirection(){
 
             for(Direction newDirection : Direction.values()){
-                if((newDirection.x * -1) == this.x && (newDirection.y * -1) == this.y)
+                if((newDirection.coordinates.x * -1) == this.coordinates.x && (newDirection.coordinates.y * -1) == this.coordinates.y)
                     return newDirection;
             }
 
@@ -135,7 +132,7 @@ public class GameMapNew {
 
         //Find POS of hives.
 
-        ArrayList<int[]> hives = new ArrayList<int[]>();
+        ArrayList<Vector2> hives = new ArrayList<Vector2>();
         GameObject currentCell;
 
         for(int y = 0; y < mapHeight; y++){
@@ -144,39 +141,39 @@ public class GameMapNew {
                 currentCell = map[y][x];
 
                 if(currentCell instanceof Hive)
-                    hives.add(new int[]{x, y});
+                    hives.add(new Vector2(x, y));
             }
         }
 
-        for(int[] hive : hives){
-            if(checkSurroundings(new Queen(), hive[0], hive[1]) == 0){ //Check if there is no queen around the hive
+        for(Vector2 hive : hives){
+            if(checkSurroundings(new Queen(), hive) == 0){ //Check if there is no queen around the hive
 
                 //System.out.println("There is no queen!");
 
-                if(checkSurroundings(new Bee(0,0), hive[0], hive[1]) >= 2){ //Check if there is two bees near hive
+                if(checkSurroundings(new Bee(0,0), hive) >= 2){ //Check if there is two bees near hive
 
                     //System.out.println("There are at least two bees!");
 
-                    int[] emptyCell = findEmptyCell(hive[0], hive[1]);  //Spawn queen on empty spot
-                    map[emptyCell[1]][emptyCell[0]] = new Queen();
+                    Vector2 emptyCell = findEmptyCell(hive);  //Spawn queen on empty spot
+                    map[emptyCell.y][emptyCell.x] = new Queen();
                 }
             }
         }
     }
 
     /** Checks if a bee near a hive has pollen. If true remove pollen and spawn new bee. */
-    private void isBeeWithPollenNearHiveEqualsSpawn(ArrayList<int[]> hiveLocations){
+    private void isBeeWithPollenNearHiveEqualsSpawn(ArrayList<Vector2> hiveLocations){
 
-        for(int[] coords : hiveLocations){
-            ArrayList<Bee> beesAroundHive = getBeesAroundGameObject(new Hive(), coords[0], coords[1]);
+        for(Vector2 coords : hiveLocations){
+            ArrayList<Bee> beesAroundHive = getBeesAroundGameObject(new Hive(), coords.x, coords.y);
 
             //System.out.println(beesAroundHive.size());
 
             for(Bee bee : beesAroundHive){
                 if(bee.hasPollen()){
                     //Spawn new bee at hive
-                    int[] emptyLocation = findEmptyCell(coords[0], coords[1]);
-                    map[emptyLocation[1]][emptyLocation[0]] = new Bee(coords[0], coords[1]);
+                    Vector2 emptyLocation = findEmptyCell(coords);
+                    map[emptyLocation.y][emptyLocation.x] = new Bee(coords.x, coords.y);
 
                     //Remove pollen from bee
                     bee.removePollen();
@@ -187,10 +184,10 @@ public class GameMapNew {
     }
 
     /** Checks if a bee near a flower. If true give pollen to bee. */
-    private void isBeeWithPollenNearFlowerGivePollen(ArrayList<int[]> flowerLocations){
+    private void isBeeWithPollenNearFlowerGivePollen(ArrayList<Vector2> flowerLocations){
 
-        for(int[] coords : flowerLocations){
-            ArrayList<Bee> beesAroundFlower = getBeesAroundGameObject(new Bee(0,0), coords[0], coords[1]);
+        for(Vector2 coords : flowerLocations){
+            ArrayList<Bee> beesAroundFlower = getBeesAroundGameObject(new Bee(0,0), coords.x, coords.y);
 
             for(Bee bee : beesAroundFlower){
                 bee.givePollen();
@@ -206,9 +203,9 @@ public class GameMapNew {
 
         //If contains queen, fly in psudo random direction
 
-        ArrayList<int[]> hiveLocations = getGameObjectLocations(new Hive()); //Find hive locations
-        ArrayList<int[]> flowerLocations = getGameObjectLocations(new Flower()); //Find flowers
-        ArrayList<int[]> beeLocations = getGameObjectLocations(new Bee(0,0));
+        ArrayList<Vector2> hiveLocations = getGameObjectLocations(new Hive()); //Find hive locations
+        ArrayList<Vector2> flowerLocations = getGameObjectLocations(new Flower()); //Find flowers
+        ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0));
 
         //Does bees near hive have pollen? then spawn new bee
         isBeeWithPollenNearHiveEqualsSpawn(hiveLocations);
@@ -222,15 +219,15 @@ public class GameMapNew {
 
     }
 
-    private void moveBees(ArrayList<int[]> beesLocations, ArrayList<int[]> flowerLocations){
+    private void moveBees(ArrayList<Vector2> beesLocations, ArrayList<Vector2> flowerLocations){
 
-        for(int[] beeLocation : beesLocations){
+        for(Vector2 beeLocation : beesLocations){
 
-            Bee currentBee = (Bee)map[beeLocation[1]][beeLocation[0]];
+            Bee currentBee = (Bee)map[beeLocation.y][beeLocation.x];
 
             if(currentBee.hasPollen()){ //GoTowardsHive
 
-                LinkedList<int[]> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveX(), currentBee.getHiveY(), beeLocation[0], beeLocation[1]); //Get sorted set of next coordinates
+                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveCoordinates(), beeLocation); //Get sorted set of next coordinates
 
                 //System.out.println(beeLocation[0] + " " + beeLocation[1]);
                 //System.out.println(currentBee.getHiveX() + " " + currentBee.getHiveY());
@@ -242,9 +239,9 @@ public class GameMapNew {
 
                 for(int i = 0; i < 7; i++){
 
-                    int[] coordinate = coordinates.get(i);
+                    Vector2 coordinate = coordinates.get(i);
 
-                    if(moveBee(new int[]{beeLocation[0], beeLocation[1]}, new int[]{coordinate[0], coordinate[1]}))
+                    if(moveBee(new Vector2(beeLocation), new Vector2(coordinate)))
                         break;
 
                 }
@@ -255,23 +252,25 @@ public class GameMapNew {
 
                 //If the bees currentHuntDirection is not set. Give it one
                 if(currentBee.getCurrentHuntDirection() == null)
-                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(currentBee.getHiveX(), currentBee.getHiveY(), beeLocation[0], beeLocation[1]).findOppositeDirection());//Calculate the direction away from hive, give that to the bee
+                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(currentBee.getHiveCoordinates(), beeLocation).findOppositeDirection());//Calculate the direction away from hive, give that to the bee
 
                 //If bee is # moves from flower, set direction to that way //TODO Might need to be set to a higher number
-                int[] nearestFlower = isBeeNearFlower(beeLocation, flowerLocations, Bee.BEE_FLOWER_ALERT_DIST);
+                Vector2 nearestFlower = isBeeNearFlower(beeLocation, flowerLocations, Bee.BEE_FLOWER_ALERT_DIST);
 
                 if(nearestFlower != null)
-                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(nearestFlower[0], nearestFlower[1], beeLocation[0], beeLocation[1])); //Get direction of flower, and set that to the be the bees direction
+                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(nearestFlower, beeLocation)); //Get direction of flower, and set that to the be the bees direction
 
                 //move in that direction if possible, or continues on list
                 //Get list of directions in bees desired direction
-                LinkedList<int[]> coordinates = getSortedSetOfDirectionalCoordinates(beeLocation[0] + currentBee.getCurrentHuntDirection().x, beeLocation[1] + currentBee.getCurrentHuntDirection().y, beeLocation[0], beeLocation[1]);
+                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(new Vector2(beeLocation.x + currentBee.getCurrentHuntDirection().coordinates.x,
+                                                                                                    beeLocation.y + currentBee.getCurrentHuntDirection().coordinates.y),
+                                                                                                        beeLocation);
 
                 for(int i = 0; i < 7; i++){
 
-                    int[] coordinate = coordinates.get(i);
+                    Vector2 coordinate = coordinates.get(i);
 
-                    if(moveBee(new int[]{beeLocation[0], beeLocation[1]}, new int[]{coordinate[0], coordinate[1]}))
+                    if(moveBee(new Vector2(beeLocation), new Vector2(coordinate)))
                         break;
 
                 }
@@ -284,21 +283,21 @@ public class GameMapNew {
      * @param flowersLocations ArrayList with coordinates of all flowers
      * @param maxDist max allowed dist to flowers
      * @return finds the closest flower within reach (maxDist), or null if non is found. */ //TODO MIGHT CONTAIN BUGS!!
-    private int[] isBeeNearFlower(int[] beeLocation, ArrayList<int[]> flowersLocations, int maxDist){
+    private Vector2 isBeeNearFlower(Vector2 beeLocation, ArrayList<Vector2> flowersLocations, int maxDist){
 
         ArrayList<double[]> inReachFlowers = new ArrayList<double[]>();
 
-        for(int[] ints : flowersLocations){
+        for(Vector2 flowerVector : flowersLocations){
 
             //Calculate distance from bee to flower
-            int xDiff = Math.abs(ints[0] - beeLocation[0]);
-            int yDiff = Math.abs(ints[1] - beeLocation[1]);
+            int xDiff = Math.abs(flowerVector.x - beeLocation.x);
+            int yDiff = Math.abs(flowerVector.y - beeLocation.y);
 
             //Create list of flowers within reach, less or equal to maxDist
             //Get list of flowers in reach
             if(xDiff <= maxDist && yDiff <= maxDist){
-                double distance = Math.sqrt(Math.pow(ints[0], 2) + Math.pow(ints[1], 2)); //Calculate distance in double
-                inReachFlowers.add(new double[]{ints[0], ints[1], distance}); //Save the distance with the valid flower
+                double distance = Math.sqrt(Math.pow(flowerVector.x, 2) + Math.pow(flowerVector.y, 2)); //Calculate distance in double
+                inReachFlowers.add(new double[]{flowerVector.x, flowerVector.y, distance}); //Save the distance with the valid flower
             }
         }
 
@@ -322,24 +321,24 @@ public class GameMapNew {
             }
 
 
-            return new int[]{(int)closestFlower[0], (int)closestFlower[1]};
+            return new Vector2((int)closestFlower[0], (int)closestFlower[1]);
         }
 
         return null;
     }
 
     /** Moves the bee. Return true if bee was moved. */
-    private boolean moveBee(int[] myCoords, int[] destCoords){
+    private boolean moveBee(Vector2 myCoords, Vector2 destCoords){
 
         try{
-            if(map[destCoords[1]][destCoords[0]] instanceof GameStructure){
-                if(!((GameStructure) map[destCoords[1]][destCoords[0]]).isSolid()){
+            if(map[destCoords.y][destCoords.x] instanceof GameStructure){
+                if(!((GameStructure) map[destCoords.y][destCoords.x]).isSolid()){
 
                     //MOVE
-                    map[destCoords[1]][destCoords[0]] = new Bee(((Bee)map[myCoords[1]][myCoords[0]]).getHiveX(), ((Bee)map[myCoords[1]][myCoords[0]]).getHiveY());
-                    if(((Bee)map[myCoords[1]][myCoords[0]]).hasPollen()) //Keep pollen state
-                        ((Bee)map[destCoords[1]][destCoords[0]]).givePollen();
-                    map[myCoords[1]][myCoords[0]] = new GameStructure(false); //Delete old bee
+                    map[destCoords.y][destCoords.x] = new Bee(((Bee)map[myCoords.y][myCoords.x]).getHiveCoordinates().x, ((Bee)map[myCoords.y][myCoords.x]).getHiveCoordinates().y);
+                    if(((Bee)map[myCoords.y][myCoords.x]).hasPollen()) //Keep pollen state
+                        ((Bee)map[destCoords.y][destCoords.x]).givePollen();
+                    map[myCoords.y][myCoords.x] = new GameStructure(false); //Delete old bee
 
                     return true;
                 }
@@ -352,10 +351,10 @@ public class GameMapNew {
     }
 
     /** Finds a direction from myCoords to destCoords. */
-    private Direction findDirectionFromCoords(int destX, int destY, int myX, int myY){
+    private Direction findDirectionFromCoords(Vector2 dest, Vector2 me){
 
-        int xDifference =  destX - myX;
-        int yDifference =  destY - myY;
+        int xDifference =  dest.x - me.x;
+        int yDifference =  dest.y - me.y;
 
         xDifference = (xDifference == 0) ? 0 : (xDifference < 0) ? -1 : 1; //Reduce to -1, 0, 1
         yDifference = (yDifference == 0) ? 0 : (yDifference < 0) ? -1 : 1; //Reduce to -1, 0, 1
@@ -364,7 +363,7 @@ public class GameMapNew {
 
         //Find the first direction
         for(Direction direction : Direction.values()){
-            if(direction.x == xDifference && direction.y == yDifference)
+            if(direction.coordinates.x == xDifference && direction.coordinates.y == yDifference)
                 firstDirection = direction;
         }
 
@@ -372,10 +371,10 @@ public class GameMapNew {
     }
 
     /** */
-    private LinkedList<int[]> getSortedSetOfDirectionalCoordinates(int destX, int destY, int myX, int myY){
+    private LinkedList<Vector2> getSortedSetOfDirectionalCoordinates(Vector2 dest, Vector2 me){
 
         //Find the first direction
-        Direction firstDirection = findDirectionFromCoords(destX, destY, myX, myY);
+        Direction firstDirection = findDirectionFromCoords(dest, me);
 
         LinkedList<Direction> directionLinkedList = Direction.getLinkedList();
 
@@ -392,20 +391,21 @@ public class GameMapNew {
             directionLinkedListOrdered.add(directionLinkedList.pollLast());
         }
 
-        return convertRelativeToMyPos(directionLinkedListOrdered, myX, myY);
+        return convertRelativeToMyPos(directionLinkedListOrdered, me);
     }
 
-    private LinkedList<int[]> convertRelativeToMyPos(LinkedList<Direction> list, int myX, int myY){
+    private LinkedList<Vector2> convertRelativeToMyPos(LinkedList<Direction> list, Vector2 me){
 
-        LinkedList<int[]> listInt = new LinkedList<int[]>();
+        LinkedList<Vector2> listInt = new LinkedList<Vector2>();
 
         for (Direction direction : list) {
-            listInt.addLast(direction.getDirectionArray());
+            //listInt.addLast(direction.getDirectionArray());
+            listInt.addLast(direction.getCoordinates()); //TODO IS THIS CORRECT?
         }
 
-        for (int[] ints : listInt) {
-            ints[0] = ints[0] + myX;
-            ints[1] = ints[1] + myY;
+        for (Vector2 vector : listInt) {
+            vector.x = vector.x + me.x;
+            vector.y = vector.y + me.y;
         }
 
         return listInt;
@@ -438,15 +438,15 @@ public class GameMapNew {
     }
 
     /** Searches the map and returns the coordinates for the requested game object. */
-    private ArrayList<int[]> getGameObjectLocations(GameObject gameObject){
+    private ArrayList<Vector2> getGameObjectLocations(GameObject gameObject){
 
-        ArrayList<int[]> gameObjectLocations = new ArrayList<int[]>();
+        ArrayList<Vector2> gameObjectLocations = new ArrayList<Vector2>();
 
         for(int y = 0; y < mapHeight; y++){
             for(int x = 0; x < mapWidth; x++){
 
                 if(map[y][x].getClass() == gameObject.getClass())
-                    gameObjectLocations.add(new int[]{x, y});
+                    gameObjectLocations.add(new Vector2(x, y));
             }
         }
 
@@ -469,9 +469,12 @@ public class GameMapNew {
         return bees;
     }
 
-    private int checkSurroundings(GameObject requestedGameObject, int x, int y){
+    private int checkSurroundings(GameObject requestedGameObject, Vector2 coords){
 
         ArrayList<GameObject> surroundingCells = new ArrayList<GameObject>();
+        int x = coords.x;
+        int y = coords.y;
+
 
         surroundingCells.add(map[y+1][x]);
         surroundingCells.add(map[y+1][x+1]);
@@ -493,44 +496,46 @@ public class GameMapNew {
 
     //TODO BUG: does not check layer > 1 correctly.
     /** Searches for an empty cell near coords, returns coords of empty cell. */
-    private int[] findEmptyCell(int x, int y){
+    private Vector2 findEmptyCell(Vector2 coords){
 
+        int x = coords.x;
+        int y = coords.y;
         int layer = 1;
 
         while(true) {
 
             if(map[y + layer][x] instanceof GameStructure)
                 if(!((GameStructure)map[y + layer][x]).isSolid())
-                    return new int[]{x, y + layer};
+                    return new Vector2(x, y + layer);
 
 
             if (map[y + layer][x + layer] instanceof GameStructure)
                 if(!((GameStructure)map[y + layer][x + layer]).isSolid())
-                    return new int[]{x + layer, y + layer};
+                    return new Vector2(x + layer, y + layer);
 
             if (map[y][x + layer] instanceof GameStructure)
                 if(!((GameStructure)map[y][x + layer]).isSolid())
-                    return new int[]{x + layer, y};
+                    return new Vector2(x + layer, y);
 
             if (map[y - layer][x + layer] instanceof GameStructure)
                 if(!((GameStructure)map[y - layer][x + layer]).isSolid())
-                    return new int[]{x + layer, y - layer};
+                    return new Vector2(x + layer, y - layer);
 
             if (map[y - layer][x] instanceof GameStructure)
                 if(!((GameStructure)map[y - layer][x]).isSolid())
-                    return new int[]{x, y - layer};
+                    return new Vector2(x, y - layer);
 
             if (map[y - layer][x - layer] instanceof GameStructure)
                 if(!((GameStructure)map[y - layer][x - layer]).isSolid())
-                    return new int[]{x - layer, y - layer};
+                    return new Vector2(x - layer, y - layer);
 
             if (map[y][x - layer] instanceof GameStructure)
                 if(!((GameStructure)map[y][x - layer]).isSolid())
-                    return new int[]{x - layer, y};
+                    return new Vector2(x - layer, y);
 
             if (map[y + layer][x - layer] instanceof GameStructure)
                 if(!((GameStructure)map[y + layer][x - layer]).isSolid())
-                    return new int[]{x - layer, y + layer};
+                    return new Vector2(x - layer, y + layer);
 
             layer++;
         }

@@ -9,6 +9,6 @@ public class Hive extends GameObject {
     public Hive() {
         super("hive.png");
 
-        ownedBees = new ArrayList<Bee>();
+        ownedBees = new ArrayList<Bee>(); //TODO is this used at all atm? Or only for expanstion. MAKE SURE BEES ARE GETTING ADDED
     }
 }

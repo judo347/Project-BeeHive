@@ -2,6 +2,7 @@ package dk.mk.gameObjects;
 
 import com.badlogic.gdx.graphics.Texture;
 import dk.mk.GameMapNew;
+import dk.mk.Vector2;
 
 public class Bee extends GameObject {
 
@@ -9,8 +10,7 @@ public class Bee extends GameObject {
     private Texture noPollenTexture;
 
     private boolean  hasPollen;
-    private int hiveX;
-    private int hiveY;
+    private Vector2 hiveCoordinates;
 
     private GameMapNew.Direction currentHuntDirection;
 
@@ -18,8 +18,7 @@ public class Bee extends GameObject {
 
     public Bee(int hiveX, int hiveY) {
         super("beeNoPollen.png");
-        this.hiveX = hiveX;
-        this.hiveY = hiveY;
+        this.hiveCoordinates = new Vector2(hiveX, hiveY);
 
         this.pollenTexture = new Texture("beePollen.png");
         this.noPollenTexture = new Texture("beeNoPollen.png");
@@ -29,12 +28,8 @@ public class Bee extends GameObject {
         this.currentHuntDirection = null;
     }
 
-    public int getHiveX() {
-        return hiveX;
-    }
-
-    public int getHiveY() {
-        return hiveY;
+    public Vector2 getHiveCoordinates() {
+        return new Vector2(hiveCoordinates);
     }
 
     public boolean hasPollen(){
