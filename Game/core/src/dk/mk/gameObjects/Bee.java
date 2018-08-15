@@ -1,7 +1,7 @@
 package dk.mk.gameObjects;
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.mk.GameMapNew;
+import dk.mk.GameMap;
 import dk.mk.Vector2;
 
 public class Bee extends GameObject {
@@ -11,14 +11,17 @@ public class Bee extends GameObject {
 
     private boolean  hasPollen;
     private Vector2 hiveCoordinates;
+    private GameMap.Direction currentHuntDirection;
 
-    private GameMapNew.Direction currentHuntDirection;
+    public static final int BEE_FLOWER_ALERT_DIST = 10; //Dictates the distance the bee can sense a flower. Measurement is in-game tiles.
 
-    public static final int BEE_FLOWER_ALERT_DIST = 10;
+    public Bee(int hiveX, int hiveY){
+        this(new Vector2(hiveX, hiveY));
+    }
 
-    public Bee(int hiveX, int hiveY) {
+    public Bee(Vector2 hiveCoords) {
         super("beeNoPollen.png");
-        this.hiveCoordinates = new Vector2(hiveX, hiveY);
+        this.hiveCoordinates = hiveCoords;
 
         this.pollenTexture = new Texture("beePollen.png");
         this.noPollenTexture = new Texture("beeNoPollen.png");
@@ -45,11 +48,11 @@ public class Bee extends GameObject {
         this.currentHuntDirection = null; //Reset direction when pollen is harvested = it found home
     }
 
-    public GameMapNew.Direction getCurrentHuntDirection() {
+    public GameMap.Direction getCurrentHuntDirection() {
         return currentHuntDirection;
     }
 
-    public void setCurrentHuntDirection(GameMapNew.Direction currentHuntDirection) {
+    public void setCurrentHuntDirection(GameMap.Direction currentHuntDirection) {
         this.currentHuntDirection = currentHuntDirection;
     }
 

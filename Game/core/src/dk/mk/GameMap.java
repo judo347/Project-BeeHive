@@ -5,12 +5,11 @@ import dk.mk.gameObjects.*;
 
 import java.util.*;
 
-//TODO Maybe use own defines int[].. so it only and always have two slots for coordinates
-
 //TODO bee should "Bouce" on walls. MIssing feature: new queen find new place to live.
 
-public class GameMapNew {
+public class GameMap {
 
+    /** This enum is used as the directions for the bees. */
     public enum Direction{
         NORTH(0, 1), NORTHEAST(1, 1), EAST(1, 0), SOUTHEAST(1, -1), SOUTH(0, -1), SOUTHWEST(-1, -1), WEST(-1, 0), NORTHWEST(-1, 1);
 
@@ -43,7 +42,7 @@ public class GameMapNew {
     private int mapWidth;
     private int mapHeight;
 
-    public GameMapNew() {
+    public GameMap() {
 
         //Initialize map
         if(GameInfo.WINDOW_HEIGHT % GameInfo.SQUARE_SIZE != 0 || GameInfo.WINDOW_WIDTH % GameInfo.SQUARE_SIZE != 0)
@@ -58,8 +57,11 @@ public class GameMapNew {
         //Fill map with border + blank
         initializeBlankBorder();
 
+        //Fill map with game elements
+        SpawnMethods.testSpawn(map);
     }
 
+    /** Initializes the map: creates the border and the empty play space. */
     private void initializeBlankBorder(){
 
         for(int y = 0; y < mapHeight; y++){
@@ -74,8 +76,6 @@ public class GameMapNew {
                 }
             }
         }
-
-        SpawnMethods.testSpawn(map);
     }
 
     public void render(SpriteBatch batch){
@@ -86,27 +86,23 @@ public class GameMapNew {
         }
     }
 
+    /** The tick of the game. Calls the rules and progresses the game accordingly. */
     public void tick(){
 
         //TODO IMPROVEMENT: Only one rule per tick. So you cannot spawn a queen and move at the same tick.
         preGameCheck();
         queenRuleCheck();
         harvestRuleCheck();
-
-
-
-        //System.out.println("Hives " + hives.size());
-        //System.out.println("Bees " + beeCount);
-        System.out.println("sek");
     }
 
+    /** The pre-game check: is there at least two bees and one hive? */
     private void preGameCheck(){
 
-        //Pre-game check: Is there at least one hive and two bees?
         int beeCount = 0;
         int hiveCount = 0;
         GameObject currentCell;
 
+        //Runs through map and counts bees and hives
         for(int y = 0; y < mapHeight; y++){
             for(int x = 0; x < mapWidth; x++){
 
@@ -120,11 +116,11 @@ public class GameMapNew {
             }
         }
 
+        //Check the requirement
         if(beeCount < 2 || hiveCount < 1)
             throw new IllegalGameStart(beeCount, hiveCount);
-
-        //System.out.println("PregameCheck: HiveCount = " + hiveCount + " BeeCount = " + beeCount + ".");
     }
+
 
     private void queenRuleCheck(){
         //Queen Rule: If two bees is near a hive, and there is no queen on the way or present,

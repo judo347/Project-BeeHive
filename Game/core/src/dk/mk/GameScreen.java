@@ -1,15 +1,13 @@
 package dk.mk;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.physics.box2d.World;
 
 import static dk.mk.GameInfo.TICK_DURATION;
 
 public class GameScreen implements Screen{
 
     private GdxGame game;
-    private World world;
-    private GameMapNew map;
+    private GameMap map;
 
     private float stateTime;
 
@@ -20,8 +18,7 @@ public class GameScreen implements Screen{
     }
 
     private void initialize(){
-        //this.world = new World(new Vector2(0,-9.8f), true); //Creating a world with gravity, true allows sleep = Dont calculate when nothing happens to elements.
-        this.map = new GameMapNew();
+        this.map = new GameMap();
     }
 
     @Override
@@ -33,11 +30,13 @@ public class GameScreen implements Screen{
     public void render(float delta) {
         this.stateTime += delta;
 
+        //Calls the method map.tick() when/every TICK_DURATION has passed.
         if(stateTime >= TICK_DURATION){
             this.map.tick();
             stateTime -= TICK_DURATION;
         }
 
+        //Render map
         game.batch.begin();
         this.map.render(game.batch);
         game.batch.end();

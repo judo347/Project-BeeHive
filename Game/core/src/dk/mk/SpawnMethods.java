@@ -5,6 +5,7 @@ import dk.mk.gameObjects.Flower;
 import dk.mk.gameObjects.GameObject;
 import dk.mk.gameObjects.Hive;
 
+/** The class contains different methods used to start different times of games. */
 public class SpawnMethods {
 
     public static void testSpawn(GameObject[][] map){
