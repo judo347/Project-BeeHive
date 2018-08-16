@@ -39,4 +39,4 @@ OOO: After a preset distance from the other hive. Not ontop of flowers.
 
 ### Gameplay GIFs ###
 ![A lot of bees](/GIFS/beeHive01.gif)
-![Brand new game](/GIFS/README/harvestRule.gif)
+![Brand new game](/GIFS/beeHive02.gif)
