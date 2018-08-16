@@ -1,12 +1,14 @@
-A visual simulation of bees in the style of John Conways <a href="https://bitstorm.org/gameoflife/">Game of Life</a>. The project is written in Java with the support from the framework <a href="https://libgdx.badlogicgames.com/">LibGdx</a>.
+## Project: Bee-Hive ##
+A visual simulation of bees in the style of John Conways <a href="https://bitstorm.org/gameoflife/">Game of Life</a>. 
+The project is written in Java with the support from the framework <a href="https://libgdx.badlogicgames.com/">LibGdx</a>.
 
+### Elements and Concept ###
+There is three different elements: bees (Yellow ![](/Game/core/assets/beeNoPollen.png) or Orange if it has pollen), 
+queens (Yellow with Q), hives (Black) and flowers (Red).
 
-
-### Elemtents and Concept ###
-
-There will be 3 different elements: bees (Yellow), hives (Blue) and flowers (Red).
-
-The concept is to simulate a bee hive with bees and neaby flowers. The bees will follow preset rules in the style of the Game of Life. Their purpose is to multiply in number and expand to a new hive.
+The concept is to simulate a bee hive with bees and neaby flowers. 
+The bees will follow preset rules in the style of the Game of Life. 
+Their purpose is to multiply in number and expand to a new hive.
 
 ### Rules ####
 

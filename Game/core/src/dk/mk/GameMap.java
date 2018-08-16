@@ -230,32 +230,31 @@ public class GameMap {
                 }
             }else{ //GoAwayFromHive
 
-                //currentBee;
-                //beeLocation;
-
                 //If the bees currentHuntDirection is not set. Give it one
-                if(currentBee.getCurrentHuntDirection() == null)
-                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(currentBee.getHiveCoordinates(), beeLocation).findOppositeDirection());//Calculate the direction away from hive, give that to the bee
+                if(currentBee.getCurrentHuntDirection() == null){
 
-                //If bee is # moves from flower, set direction to that way //TODO Might need to be set to a higher number
+                    //Calculate the direction away from hive, give that to the bee
+                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(currentBee.getHiveCoordinates(), beeLocation).findOppositeDirection());
+                }
+
+                //If bee is # moves from flower, set direction to that way
                 Vector2 nearestFlower = isBeeNearFlower(beeLocation, flowerLocations, Bee.BEE_FLOWER_ALERT_DIST);
 
                 if(nearestFlower != null)
                     currentBee.setCurrentHuntDirection(findDirectionFromCoords(nearestFlower, beeLocation)); //Get direction of flower, and set that to the be the bees direction
 
-                //move in that direction if possible, or continues on list
                 //Get list of directions in bees desired direction
                 LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(new Vector2(beeLocation.x + currentBee.getCurrentHuntDirection().coordinates.x,
                                                                                                     beeLocation.y + currentBee.getCurrentHuntDirection().coordinates.y),
                                                                                                         beeLocation);
 
+                //move bee in that direction if possible, or continues on list
                 for(int i = 0; i < 7; i++){
 
                     Vector2 coordinate = coordinates.get(i);
 
                     if(moveBee(new Vector2(beeLocation), new Vector2(coordinate)))
                         break;
-
                 }
             }
         }
