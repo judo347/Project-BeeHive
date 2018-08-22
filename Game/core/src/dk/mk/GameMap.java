@@ -5,8 +5,6 @@ import dk.mk.gameObjects.*;
 
 import java.util.*;
 
-//TODO bee should "Bouce" on walls. MIssing feature: new queen find new place to live.
-
 public class GameMap {
 
     /** This enum is used as the directions for the bees. */
@@ -88,8 +86,6 @@ public class GameMap {
 
     /** The tick of the game. Calls the rules and progresses the game accordingly. */
     public void tick(){
-
-        //TODO IMPROVEMENT: Only one rule per tick. So you cannot spawn a queen and move at the same tick.
         preGameCheck();
         queenRuleCheck();
         harvestRuleCheck();
@@ -124,7 +120,6 @@ public class GameMap {
     /** Queen rule check: if there is two or more bees near a hive and
      *  there is no queen on the way or present at hive. Then create one. */
     private void queenRuleCheck(){
-        //TODO add creation time?
 
         ArrayList<Vector2> hives = new ArrayList<Vector2>();
         GameObject currentCell;
@@ -151,7 +146,6 @@ public class GameMap {
         }
     }
 
-    //TODO Optimize so that the map has a list of the hives and such..
     /** Harvest rule check: if the hive contains a queen, then the bee will choose a psudo random direction and
      *  start searching for a flower. When found the bee will harvest it, and return to the hive*/
     private void harvestRuleCheck(){
@@ -175,7 +169,7 @@ public class GameMap {
     private void isBeeWithPollenNearHiveEqualsSpawn(ArrayList<Vector2> hiveLocations){
 
         for(Vector2 hiveCoords : hiveLocations){
-            ArrayList<Bee> beesAroundHive = getBeesAroundGameObject(new Hive(), hiveCoords); //Get arrayList of bees around current hive
+            ArrayList<Bee> beesAroundHive = getBeesInProximityCoordinate(hiveCoords); //Get arrayList of bees around current hive
 
             //Check all bees around the current hive for pollen.
             for(Bee bee : beesAroundHive){
@@ -197,7 +191,7 @@ public class GameMap {
     private void isBeeWithPollenNearFlowerGivePollen(ArrayList<Vector2> flowerLocations){
 
         for(Vector2 flowerCoords : flowerLocations){
-            ArrayList<Bee> beesAroundFlower = getBeesAroundGameObject(new Bee(0,0), flowerCoords); //Get bees around flower.
+            ArrayList<Bee> beesAroundFlower = getBeesInProximityCoordinate(flowerCoords); //Get bees around flower.
 
             //Give pollen to all bees around current flower.
             for(Bee bee : beesAroundFlower){
@@ -264,7 +258,7 @@ public class GameMap {
      * @param beeLocation the coordinates of the bee
      * @param flowersLocations ArrayList with coordinates of all flowers
      * @param maxDist max allowed dist to flowers
-     * @return finds the closest flower within reach (maxDist), or null if non is found. */ //TODO MIGHT CONTAIN BUGS!!
+     * @return finds the closest flower within reach (maxDist), or null if non is found. */
     private Vector2 isBeeNearFlower(Vector2 beeLocation, ArrayList<Vector2> flowersLocations, int maxDist){
 
         ArrayList<double[]> inReachFlowers = new ArrayList<double[]>();
@@ -309,10 +303,14 @@ public class GameMap {
         return null;
     }
 
-    /** Moves the bee. Return true if bee was moved. */
+    /** Moves the bee. Return true if bee was moved.
+     *  @param myCoords coordinates of the bee to be moved.
+     *  @param destCoords coordinates of the desired destination of the bee.
+     *  @return true if bee was moved. */
     private boolean moveBee(Vector2 myCoords, Vector2 destCoords){
 
         try{
+            ////Is destination empty check?
             if(map[destCoords.y][destCoords.x] instanceof GameStructure){
                 if(!((GameStructure) map[destCoords.y][destCoords.x]).isSolid()){
 
@@ -325,7 +323,7 @@ public class GameMap {
                     return true;
                 }
             }
-        }catch (ArrayIndexOutOfBoundsException e){
+        }catch (ArrayIndexOutOfBoundsException e){ //If request is outside playing field.
             return false;
         }
 
@@ -352,7 +350,7 @@ public class GameMap {
         return firstDirection;
     }
 
-    /** */
+    /** @return a list of sorted directions created from the given vectors. */
     private LinkedList<Vector2> getSortedSetOfDirectionalCoordinates(Vector2 dest, Vector2 me){
 
         //Find the first direction
@@ -360,7 +358,7 @@ public class GameMap {
 
         LinkedList<Direction> directionLinkedList = Direction.getLinkedList();
 
-        //Cycles through the list untill firstDirection is first in list
+        //Cycles through the list until firstDirection is first in list
         while(firstDirection != directionLinkedList.peek()){
             directionLinkedList.addLast(directionLinkedList.poll());
         }
@@ -376,29 +374,32 @@ public class GameMap {
         return convertRelativeToMyPos(directionLinkedListOrdered, me);
     }
 
+    /** @return linkedList that contains coordinates relative to me-vector. */
     private LinkedList<Vector2> convertRelativeToMyPos(LinkedList<Direction> list, Vector2 me){
 
-        LinkedList<Vector2> listInt = new LinkedList<Vector2>();
+        LinkedList<Vector2> relativeList = new LinkedList<Vector2>();
 
-        for (Direction direction : list) {
-            //listInt.addLast(direction.getDirectionArray());
-            listInt.addLast(direction.getCoordinates()); //TODO IS THIS CORRECT?
-        }
+        //Create copy of original list and convert to Vector2 list
+        for (Direction direction : list)
+            relativeList.addLast(direction.getCoordinates());
 
-        for (Vector2 vector : listInt) {
+        //Calculate relative vectors
+        for (Vector2 vector : relativeList) {
             vector.x = vector.x + me.x;
             vector.y = vector.y + me.y;
         }
 
-        return listInt;
+        return relativeList;
     }
 
-    private ArrayList<Bee> getBeesAroundGameObject(GameObject gameObject, Vector2 coordinates){
+    /** @return arrayList of bees surrounding given coordinate. */
+    private ArrayList<Bee> getBeesInProximityCoordinate(Vector2 coordinates){
 
         ArrayList<Bee> bees = new ArrayList<Bee>();
         int x = coordinates.x;
         int y = coordinates.y;
 
+        //Check all surrounding coordinates. If bee found, add to ArrayList
         if(map[y+1][x].getClass() == Bee.class)
             bees.add((Bee)map[y+1][x]);
         if(map[y+1][x+1].getClass() == Bee.class)
@@ -416,8 +417,6 @@ public class GameMap {
         if(map[y+1][x-1].getClass() == Bee.class)
             bees.add((Bee)map[y+1][x-1]);
 
-        //System.out.println((gameObject.getClass() == Hive.class) ? " bees near hive: " + bees.size() : " bees near flower: " + bees.size());
-
         return bees;
     }
 
@@ -426,6 +425,7 @@ public class GameMap {
 
         ArrayList<Vector2> gameObjectLocations = new ArrayList<Vector2>();
 
+        //Go through map and add all requested GameObject-locations to the array
         for(int y = 0; y < mapHeight; y++){
             for(int x = 0; x < mapWidth; x++){
 
@@ -453,13 +453,14 @@ public class GameMap {
         return bees;
     }
 
+    /** @return number of requestedGameObject surrounding given coordinates. */
     private int checkSurroundings(GameObject requestedGameObject, Vector2 coords){
 
         ArrayList<GameObject> surroundingCells = new ArrayList<GameObject>();
         int x = coords.x;
         int y = coords.y;
 
-
+        //Get all surrounding cells
         surroundingCells.add(map[y+1][x]);
         surroundingCells.add(map[y+1][x+1]);
         surroundingCells.add(map[y][x+1]);
@@ -471,15 +472,14 @@ public class GameMap {
 
         int counter = 0;
 
+        //Count surrounding cells containing requested gameObject
         for(GameObject gameObject : surroundingCells)
             if(gameObject.getClass() == requestedGameObject.getClass())
                 counter++;
 
         return counter;
     }
-
-    //TODO BUG: does not check layer > 1 correctly.
-    /** Searches for an empty cell near coords, returns coords of empty cell. */
+    /** Searches for an empty cell near given coordinates, returns coordinates of empty cell. */
     private Vector2 findEmptyCell(Vector2 coords){
 
         int x = coords.x;

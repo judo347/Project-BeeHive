@@ -36,6 +36,7 @@ OOO: After a preset distance from the other hive. Not ontop of flowers.
 
 ### Unimplemented features ###
 - Expansion rule 1 and 2.
+- Bees should have a limited lifespan.
 
 ### Gameplay GIFs ###
 ![A lot of bees](/GIFS/beeHive01.gif)

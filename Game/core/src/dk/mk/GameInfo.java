@@ -9,4 +9,6 @@ public class GameInfo {
 
     public static final int SQUARE_SIZE = 10; //Size of the game squares //Default = 10
     public static final float TICK_DURATION = 1f; //Duration of each game tick. Lower = faster //Default = 1f (Has to be float)
+
+    public static final int BEE_FLOWER_ALERT_DIST = 10;
 }

@@ -1,6 +1,7 @@
 package dk.mk.gameObjects;
 
 import com.badlogic.gdx.graphics.Texture;
+import dk.mk.GameInfo;
 import dk.mk.GameMap;
 import dk.mk.Vector2;
 
@@ -13,7 +14,8 @@ public class Bee extends GameObject {
     private Vector2 hiveCoordinates;
     private GameMap.Direction currentHuntDirection;
 
-    public static final int BEE_FLOWER_ALERT_DIST = 10; //Dictates the distance the bee can sense a flower. Measurement is in-game tiles.
+    //Dictates the distance the bee can sense a flower. Measurement is in-game tiles.
+    public static final int BEE_FLOWER_ALERT_DIST = GameInfo.BEE_FLOWER_ALERT_DIST;
 
     public Bee(int hiveX, int hiveY){
         this(new Vector2(hiveX, hiveY));
