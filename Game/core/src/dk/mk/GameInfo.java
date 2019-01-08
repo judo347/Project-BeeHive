@@ -11,4 +11,6 @@ public class GameInfo {
     public static final float TICK_DURATION = 1f; //Duration of each game tick. Lower = faster //Default = 1f (Has to be float)
 
     public static final int BEE_FLOWER_ALERT_DIST = 10;
+
+    public static final int BEE_LIFETIME = 5; //The max lifetime for a bee in seconds
 }

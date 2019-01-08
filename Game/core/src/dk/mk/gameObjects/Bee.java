@@ -10,6 +10,9 @@ public class Bee extends GameObject {
     private Texture pollenTexture;
     private Texture noPollenTexture;
 
+    private float lifetime;
+    private boolean isDead;
+
     private boolean  hasPollen;
     private Vector2 hiveCoordinates;
     private GameMap.Direction currentHuntDirection;
@@ -31,6 +34,17 @@ public class Bee extends GameObject {
         this.hasPollen = false;
 
         this.currentHuntDirection = null;
+
+        this.lifetime = 0;
+        this.isDead = false;
+    }
+
+    /** Used to update the counter for how long this bee has lived.
+     * Should be called each game tick. Also flags the bee as dead if time exceeds allowed lifespan. */
+    public void updateLifetime(float delta){
+        lifetime += delta;
+        if(lifetime >= GameInfo.BEE_LIFETIME)
+            this.isDead = true;
     }
 
     public Vector2 getHiveCoordinates() {
@@ -61,5 +75,9 @@ public class Bee extends GameObject {
     @Override
     public Texture getTexture() {
         return hasPollen ? pollenTexture : noPollenTexture;
+    }
+
+    public boolean isDead() {
+        return isDead;
     }
 }

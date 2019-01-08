@@ -86,6 +86,8 @@ public class GameMap {
 
     /** The tick of the game. Calls the rules and progresses the game accordingly. */
     public void tick(){
+
+        //TODO TICK ALL BEES
         preGameCheck();
         queenRuleCheck();
         harvestRuleCheck();
