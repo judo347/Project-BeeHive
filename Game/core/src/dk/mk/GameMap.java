@@ -90,6 +90,7 @@ public class GameMap {
         GameTickPacket gameTickPacket = new GameTickPacket(this.map);
 
         //TODO TICK ALL BEES
+        //beeTick(gameTickPacket, delta);
         preGameCheck(gameTickPacket);
         queenRuleCheck(gameTickPacket);
         harvestRuleCheck(gameTickPacket);

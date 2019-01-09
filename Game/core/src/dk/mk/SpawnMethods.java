@@ -38,6 +38,7 @@ public class SpawnMethods {
         map[71][70] = new Bee(70,70);
         map[71][71] = new Bee(70,70);
         map[70][71] = new Bee(70,70);
+        map[32][75] = new Bee(70,70);
 
         //Flowers
         map[4][4] = new Flower();
@@ -48,7 +49,6 @@ public class SpawnMethods {
         map[32][32] = new Flower();
         map[74][32] = new Flower();
         map[32][74] = new Flower();
-        map[32][75] = new Bee(70,70);
     }
 
     private void testGIFRules(GameObject[][] map){
