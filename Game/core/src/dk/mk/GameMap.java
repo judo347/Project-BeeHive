@@ -86,56 +86,28 @@ public class GameMap {
 
     /** The tick of the game. Calls the rules and progresses the game accordingly. */
     public void tick(){
+        GameTickPacket gameTickPacket = new GameTickPacket(this.map);
 
         //TODO TICK ALL BEES
-        preGameCheck();
-        queenRuleCheck();
-        harvestRuleCheck();
+        preGameCheck(gameTickPacket);
+        queenRuleCheck(gameTickPacket);
+        harvestRuleCheck(gameTickPacket);
     }
 
     /** The pre-game check: is there at least two bees and one hive? */
-    private void preGameCheck(){
-
-        int beeCount = 0;
-        int hiveCount = 0;
-        GameObject currentCell;
-
-        //Runs through map and counts bees and hives
-        for(int y = 0; y < mapHeight; y++){
-            for(int x = 0; x < mapWidth; x++){
-
-                currentCell = map[y][x];
-
-                if(currentCell instanceof Bee)
-                    beeCount++;
-
-                if(currentCell instanceof Hive)
-                    hiveCount++;
-            }
-        }
+    private void preGameCheck(GameTickPacket gtp){
 
         //Check the requirement
-        if(beeCount < 2 || hiveCount < 1)
-            throw new IllegalGameStart(beeCount, hiveCount);
+        if(gtp.getBeeCount() < 2 || gtp.getHiveCount() < 1)
+            throw new IllegalGameStart(gtp.getBeeCount(), gtp.getHiveCount());
     }
 
     /** Queen rule check: if there is two or more bees near a hive and
      *  there is no queen on the way or present at hive. Then create one. */
-    private void queenRuleCheck(){
+    private void queenRuleCheck(GameTickPacket gtp){
 
-        ArrayList<Vector2> hives = new ArrayList<Vector2>();
-        GameObject currentCell;
-
-        //Find coordinates of hives. Searches the map and saves the cells that are hives.
-        for(int y = 0; y < mapHeight; y++){
-            for(int x = 0; x < mapWidth; x++){
-
-                currentCell = map[y][x];
-
-                if(currentCell instanceof Hive)
-                    hives.add(new Vector2(x, y));
-            }
-        }
+        ArrayList<Vector2> hives = gtp.getHiveLocations();
+        boolean needUpdate = false;
 
         //Check hives for queen. If no = spawn queen.
         for(Vector2 hive : hives){
@@ -146,15 +118,18 @@ public class GameMap {
                 }
             }
         }
+
+        if(needUpdate)
+            gtp.updatePacket(this.map); //TODO This call could and should be avoid and instead updated from above line.
     }
 
     /** Harvest rule check: if the hive contains a queen, then the bee will choose a psudo random direction and
      *  start searching for a flower. When found the bee will harvest it, and return to the hive*/
-    private void harvestRuleCheck(){
+    private void harvestRuleCheck(GameTickPacket gtp){
 
-        ArrayList<Vector2> hiveLocations = getGameObjectLocations(new Hive()); //Find hive locations
-        ArrayList<Vector2> flowerLocations = getGameObjectLocations(new Flower()); //Find flower locations
-        ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0)); //Find bee locations
+        ArrayList<Vector2> hiveLocations = gtp.getHiveLocations();
+        ArrayList<Vector2> flowerLocations = gtp.getFlowerLocations();
+        ArrayList<Vector2> beeLocations = gtp.getBeeLocations();
 
         //Does bees near hive have pollen? Then spawn new bee.
         isBeeWithPollenNearHiveEqualsSpawn(hiveLocations);
@@ -164,6 +139,8 @@ public class GameMap {
 
         //AT THIS POINT: BEES HAVE GIVEN OR RECEIVED POLLEN. ITS NOW TIME TO MOVE.
         moveBees(beeLocations, flowerLocations);
+
+        gtp.updatePacket(this.map);
     }
 
     /** Checks if a bee near a hive has pollen. If true remove pollen and spawn new bee.
