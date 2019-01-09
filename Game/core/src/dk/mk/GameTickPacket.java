@@ -34,7 +34,7 @@ public class GameTickPacket {
 
                 if(currentCell instanceof Bee){
                     beeCount++;
-                    beeLocations.add(new Vector2(x, y));
+                    beeLocations.add(new Vector2(y, x)); //TODO bug?
                 } else if(currentCell instanceof Hive){
                     hiveCount++;
                     hiveLocations.add(new Vector2(x, y));

@@ -42,7 +42,9 @@ public class Bee extends GameObject {
     /** Used to update the counter for how long this bee has lived.
      * Should be called each game tick. Also flags the bee as dead if time exceeds allowed lifespan. */
     public void updateLifetime(float delta){
+        //System.out.println(lifetime);
         lifetime += delta;
+        //System.out.println(this.toString() + " " + lifetime + " " + delta);
         if(lifetime >= GameInfo.BEE_LIFETIME)
             this.isDead = true;
     }

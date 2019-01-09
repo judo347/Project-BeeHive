@@ -90,7 +90,7 @@ public class GameMap {
         GameTickPacket gameTickPacket = new GameTickPacket(this.map);
 
         //TODO TICK ALL BEES
-        //beeTick(gameTickPacket, delta);
+        beeTick(gameTickPacket, delta);
         preGameCheck(gameTickPacket);
         queenRuleCheck(gameTickPacket);
         harvestRuleCheck(gameTickPacket);
@@ -210,7 +210,6 @@ public class GameMap {
         for(Vector2 beeLocation : beesLocations){
 
             Bee currentBee = (Bee)map[beeLocation.y][beeLocation.x];
-            System.out.println("Cast sucessful");
 
             if(currentBee.hasPollen()){ //If bee has pollen. Then GoTowardsHive
 
@@ -317,11 +316,16 @@ public class GameMap {
             if(map[destCoords.y][destCoords.x] instanceof GameStructure){
                 if(!((GameStructure) map[destCoords.y][destCoords.x]).isSolid()){
 
+                    /* Old section replaced by below code: moves instead of: delete and spawn new
                     //MOVE
                     map[destCoords.y][destCoords.x] = new Bee(((Bee)map[myCoords.y][myCoords.x]).getHiveCoordinates().x, ((Bee)map[myCoords.y][myCoords.x]).getHiveCoordinates().y);
                     if(((Bee)map[myCoords.y][myCoords.x]).hasPollen()) //Keep pollen state
                         ((Bee)map[destCoords.y][destCoords.x]).givePollen();
+                    //map[myCoords.y][myCoords.x] = new GameStructure(false); //Delete old bee*/
+
+                    Bee targetBee = (Bee)map[myCoords.y][myCoords.x];
                     map[myCoords.y][myCoords.x] = new GameStructure(false); //Delete old bee
+                    map[destCoords.y][destCoords.x] = targetBee;
 
                     return true;
                 }
