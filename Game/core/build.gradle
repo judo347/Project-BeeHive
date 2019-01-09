@@ -4,6 +4,7 @@ sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.test.java.srcDirs = [ "test/" ]
 
 
 eclipse.project {
@@ -12,4 +13,5 @@ eclipse.project {
 
 dependencies {
     compile 'org.junit.jupiter:junit-jupiter-api'
+	testCompile 'junit:junit:4.12'
 }
