@@ -14,6 +14,10 @@ public class GameTickPacket {
     private ArrayList<Vector2> flowerLocations = new ArrayList<Vector2>();
     private ArrayList<Vector2> beeLocations = new ArrayList<Vector2>();
 
+    private ArrayList<Hive> allHives = new ArrayList<Hive>();
+    private ArrayList<Flower> allFlowers = new ArrayList<Flower>();
+    private ArrayList<Bee> allBees = new ArrayList<Bee>();
+
     public GameTickPacket(GameObject[][] map) {
         updatePacket(map);
     }
@@ -34,7 +38,7 @@ public class GameTickPacket {
 
                 if(currentCell instanceof Bee){
                     beeCount++;
-                    beeLocations.add(new Vector2(y, x)); //TODO bug?
+                    beeLocations.add(new Vector2(x, y));
                 } else if(currentCell instanceof Hive){
                     hiveCount++;
                     hiveLocations.add(new Vector2(x, y));

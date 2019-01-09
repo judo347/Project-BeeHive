@@ -102,10 +102,10 @@ public class GameMap {
         boolean needUpdate = false;
 
         for (Vector2 beeLocation : beeLocations) {
-            Bee currentBee = (Bee)map[beeLocation.x][beeLocation.y];
+            Bee currentBee = (Bee)map[beeLocation.y][beeLocation.x];
             currentBee.updateLifetime(delta);
             if(currentBee.isDead()){
-                map[beeLocation.x][beeLocation.y] = new GameStructure(false);
+                map[beeLocation.y][beeLocation.x] = new GameStructure(false);
                 needUpdate = true;
             }
         }
@@ -186,6 +186,21 @@ public class GameMap {
                 }
             }
         }
+    }
+
+    /** Checks if there is x or more bees belonging to a single give: spawn a second queen.
+     * x is taken from the GameInfo class. */
+    private void newQueenRuleCheck(GameTickPacket gtp){
+
+        //todo Get list of hive
+        //ArrayList<Hive>
+
+        //todo check each hive to see if it has too many bees
+
+        //todo if yes, spawn a second queen.
+
+        //todo else do nothing
+
     }
 
     /** Checks if a bee is near a flower. If true give pollen to bee.
