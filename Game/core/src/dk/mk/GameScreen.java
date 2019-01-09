@@ -18,7 +18,7 @@ public class GameScreen implements Screen{
     }
 
     private void initialize(){
-        this.map = new GameMap();
+        this.map = new GameMap(SpawnMethods.SPAWN_TYPE.TESTSPAWN);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class GameScreen implements Screen{
 
         //Calls the method map.tick() when/every TICK_DURATION has passed.
         if(stateTime >= TICK_DURATION){
-            this.map.tick();
+            this.map.tick(delta);
             stateTime -= TICK_DURATION;
         }
 

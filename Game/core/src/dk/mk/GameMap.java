@@ -2,6 +2,7 @@ package dk.mk;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.mk.gameObjects.*;
+import dk.mk.SpawnMethods.*;
 
 import java.util.*;
 
@@ -40,7 +41,7 @@ public class GameMap {
     private int mapWidth;
     private int mapHeight;
 
-    public GameMap() {
+    public GameMap(SPAWN_TYPE spawn_type) {
 
         //Initialize map
         if(GameInfo.WINDOW_HEIGHT % GameInfo.SQUARE_SIZE != 0 || GameInfo.WINDOW_WIDTH % GameInfo.SQUARE_SIZE != 0)
@@ -56,7 +57,7 @@ public class GameMap {
         initializeBlankBorder();
 
         //Fill map with game elements
-        SpawnMethods.testSpawn(map);
+        new SpawnMethods(spawn_type, map);
     }
 
     /** Initializes the map: creates the border and the empty play space. */
@@ -85,13 +86,31 @@ public class GameMap {
     }
 
     /** The tick of the game. Calls the rules and progresses the game accordingly. */
-    public void tick(){
+    public void tick(float delta){
         GameTickPacket gameTickPacket = new GameTickPacket(this.map);
 
         //TODO TICK ALL BEES
         preGameCheck(gameTickPacket);
         queenRuleCheck(gameTickPacket);
         harvestRuleCheck(gameTickPacket);
+    }
+
+    /** Used to tick the bees: update their lifetime and remove dead bees. */
+    private void beeTick(GameTickPacket gtp, float delta){
+        ArrayList<Vector2> beeLocations = gtp.getBeeLocations();
+        boolean needUpdate = false;
+
+        for (Vector2 beeLocation : beeLocations) {
+            Bee currentBee = (Bee)map[beeLocation.x][beeLocation.y];
+            currentBee.updateLifetime(delta);
+            if(currentBee.isDead()){
+                map[beeLocation.x][beeLocation.y] = new GameStructure(false);
+                needUpdate = true;
+            }
+        }
+
+        if(needUpdate)
+            gtp.updatePacket(this.map);
     }
 
     /** The pre-game check: is there at least two bees and one hive? */
@@ -115,6 +134,7 @@ public class GameMap {
                 if(checkSurroundings(new Bee(0,0), hive) >= 2){ //Check if there is at least two bees near hive
                     Vector2 emptyCell = findEmptyCell(hive);  //Find empty cell
                     map[emptyCell.y][emptyCell.x] = new Queen(); //Spawn queen in empty cell
+                    needUpdate = true; //TODO BUG In theory if hive are too close, this will have to be updated each iteration
                 }
             }
         }
@@ -129,7 +149,9 @@ public class GameMap {
 
         ArrayList<Vector2> hiveLocations = gtp.getHiveLocations();
         ArrayList<Vector2> flowerLocations = gtp.getFlowerLocations();
-        ArrayList<Vector2> beeLocations = gtp.getBeeLocations();
+        //ArrayList<Vector2> beeLocations = gtp.getBeeLocations(); //TODO BUG
+        ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0));
+
 
         //Does bees near hive have pollen? Then spawn new bee.
         isBeeWithPollenNearHiveEqualsSpawn(hiveLocations);
@@ -187,6 +209,7 @@ public class GameMap {
         for(Vector2 beeLocation : beesLocations){
 
             Bee currentBee = (Bee)map[beeLocation.y][beeLocation.x];
+            System.out.println("Cast sucessful");
 
             if(currentBee.hasPollen()){ //If bee has pollen. Then GoTowardsHive
 
@@ -502,5 +525,9 @@ public class GameMap {
 
             layer++;
         }
+    }
+
+    public GameObject[][] getMap() {
+        return map;
     }
 }
