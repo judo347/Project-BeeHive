@@ -15,5 +15,5 @@ public class GameInfo {
     //In-game specifications
     public static final int BEE_FLOWER_ALERT_DIST = 10;
     public static final float BEE_LIFETIME = 1f; //The max lifetime for a bee
-    public static final int MAX_BEES_PER_QUEEN = 5;
+    public static final int MAX_BEES_PER_QUEEN = 6;
 }

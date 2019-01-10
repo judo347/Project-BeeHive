@@ -94,6 +94,7 @@ public class GameMap {
         preGameCheck(gameTickPacket);
         queenRuleCheck(gameTickPacket);
         harvestRuleCheck(gameTickPacket);
+        newQueenRuleCheck(gameTickPacket);
     }
 
     /** Used to tick the bees: update their lifetime and remove dead bees. */
@@ -179,8 +180,9 @@ public class GameMap {
 
                     //Spawn new bee at hive
                     Vector2 emptyLocation = findEmptyCell(hiveCoords);
-                    map[emptyLocation.y][emptyLocation.x] = new Bee(hiveCoords.x, hiveCoords.y);
-
+                    Bee newBee = new Bee(hiveCoords.x, hiveCoords.y);
+                    map[emptyLocation.y][emptyLocation.x] = newBee;
+                    ((Hive)map[hiveCoords.y][hiveCoords.x]).addOwnedBee(newBee);
                     //Remove pollen from bee
                     bee.removePollen();
                 }
@@ -192,14 +194,25 @@ public class GameMap {
      * x is taken from the GameInfo class. */
     private void newQueenRuleCheck(GameTickPacket gtp){
 
-        //todo Get list of hive
-        //ArrayList<Hive>
+        ArrayList<Vector2> allHives = gtp.getHiveLocations();
+        boolean needUpdate = false;
 
-        //todo check each hive to see if it has too many bees
+        for (Vector2 hiveLoc : allHives) {
+            Hive hive = (Hive)map[hiveLoc.y][hiveLoc.x];
+            System.out.println(hive.numberOfOwnedBees());
+            if(hive.numberOfOwnedBees() >= GameInfo.MAX_BEES_PER_QUEEN){
+                Vector2 emptyCell = findEmptyCell(hiveLoc);  //Find empty cell
+                map[emptyCell.y][emptyCell.x] = new Queen(); //Spawn queen in empty cell
+                needUpdate = true; //TODO BUG In theory if hive are too close, this will have to be updated each iteration
+            }
+        }
 
-        //todo if yes, spawn a second queen.
+        if(needUpdate)
+            gtp.updatePacket(this.map);
+    }
 
-        //todo else do nothing
+    /** Check if there is two queens at a hive, if so the queen and the bees */
+    private void twoQueenRuleCheck(GameTickPacket gtp){
 
     }
 
