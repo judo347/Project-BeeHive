@@ -5,16 +5,20 @@ import java.util.ArrayList;
 public class Hive extends GameObject {
 
     ArrayList<Bee> ownedBees;
+    ArrayList<Queen> ownedQueens;
 
     public Hive() {
         super("hive.png");
 
         ownedBees = new ArrayList<Bee>();
+        ownedQueens = new ArrayList<>();
     }
 
     public int numberOfOwnedBees(){
         return ownedBees.size();
     }
+
+    public int numberOfOwnedQueens(){ return ownedQueens.size();}
 
     /** Returns half of the owned bees, they will be removed from the current hive.*/
     public ArrayList<Bee> popHalfOfOwnedBees(){
@@ -34,5 +38,9 @@ public class Hive extends GameObject {
 
     public void addOwnedBee(Bee bee){
         ownedBees.add(bee);
+    }
+
+    public void addOwnedQueen(Queen queen){
+        ownedQueens.add(queen);
     }
 }

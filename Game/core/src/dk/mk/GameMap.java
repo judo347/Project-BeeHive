@@ -89,12 +89,12 @@ public class GameMap {
     public void tick(float delta){
         GameTickPacket gameTickPacket = new GameTickPacket(this.map);
 
-        //TODO TICK ALL BEES
         beeTick(gameTickPacket, delta);
         preGameCheck(gameTickPacket);
         queenRuleCheck(gameTickPacket);
         harvestRuleCheck(gameTickPacket);
         newQueenRuleCheck(gameTickPacket);
+        twoQueenRuleCheck(gameTickPacket);
     }
 
     /** Used to tick the bees: update their lifetime and remove dead bees. */
@@ -135,7 +135,10 @@ public class GameMap {
             if(checkSurroundings(new Queen(), hive) == 0){ //Check if there is no queen around the hive
                 if(checkSurroundings(new Bee(0,0), hive) >= 2){ //Check if there is at least two bees near hive
                     Vector2 emptyCell = findEmptyCell(hive);  //Find empty cell
-                    map[emptyCell.y][emptyCell.x] = new Queen(); //Spawn queen in empty cell
+                    Hive currentHive = (Hive)map[hive.y][hive.x];
+                    Queen newQueen = new Queen();
+                    currentHive.addOwnedQueen(newQueen);
+                    map[emptyCell.y][emptyCell.x] = newQueen; //Spawn queen in empty cell
                     needUpdate = true; //TODO BUG In theory if hive are too close, this will have to be updated each iteration
                 }
             }
@@ -202,7 +205,10 @@ public class GameMap {
             System.out.println(hive.numberOfOwnedBees());
             if(hive.numberOfOwnedBees() >= GameInfo.MAX_BEES_PER_QUEEN){
                 Vector2 emptyCell = findEmptyCell(hiveLoc);  //Find empty cell
-                map[emptyCell.y][emptyCell.x] = new Queen(); //Spawn queen in empty cell
+                Hive currentHive = (Hive)map[hiveLoc.y][hiveLoc.x];
+                Queen newQueen = new Queen();
+                currentHive.addOwnedQueen(newQueen);
+                map[emptyCell.y][emptyCell.x] = newQueen; //Spawn queen in empty cell
                 needUpdate = true; //TODO BUG In theory if hive are too close, this will have to be updated each iteration
             }
         }
@@ -214,6 +220,18 @@ public class GameMap {
     /** Check if there is two queens at a hive, if so the queen and the bees */
     private void twoQueenRuleCheck(GameTickPacket gtp){
 
+        //Get all hives
+        ArrayList<Hive> allHives = gtp.getAllHives();
+
+        //Check for each all hives
+            //Check if any hive contains two or more queens
+                //if so, move or something //TODO
+
+        for (Hive hive : allHives) {
+            if(hive.numberOfOwnedQueens() >= 2){
+                //TODO
+            }
+        }
     }
 
     /** Checks if a bee is near a flower. If true give pollen to bee.
