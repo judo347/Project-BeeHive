@@ -105,8 +105,8 @@ public class GameClass {
 
         ArrayList<Vector2> hiveLocations = gtp.getHiveLocations();
         ArrayList<Vector2> flowerLocations = gtp.getFlowerLocations();
-        //ArrayList<Vector2> beeLocations = gtp.getBeeLocations(); //TODO BUG
-        ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0));
+        ArrayList<Vector2> beeLocations = gtp.getBeeLocations(); //TODO BUG
+        //ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0)); //TODO works. Can replace above line
 
 
         //Does bees near hive have pollen? Then spawn new bee.
@@ -117,8 +117,6 @@ public class GameClass {
 
         //AT THIS POINT: BEES HAVE GIVEN OR RECEIVED POLLEN. ITS NOW TIME TO MOVE.
         moveBees(beeLocations, flowerLocations);
-
-        gtp.updatePacket(this.map);
     }
 
     /** Checks if a bee near a hive has pollen. If true remove pollen and spawn new bee.
@@ -134,7 +132,7 @@ public class GameClass {
 
                     //Spawn new bee at hive
                     Vector2 emptyLocation = findEmptyCell(hiveCoords);
-                    map[emptyLocation.y][emptyLocation.x] = new Bee(hiveCoords.x, hiveCoords.y);
+                    gameMap.addGameObject(emptyLocation, new Bee(hiveCoords));
 
                     //Remove pollen from bee
                     bee.removePollen();
@@ -153,60 +151,6 @@ public class GameClass {
             //Give pollen to all bees around current flower.
             for(Bee bee : beesAroundFlower){
                 bee.givePollen();
-            }
-        }
-    }
-
-    /**
-     *  @param beesLocations an arrayList containing all bee locations.
-     *  @param flowerLocations an arrayList containing all flower locations. */
-    private void moveBees(ArrayList<Vector2> beesLocations, ArrayList<Vector2> flowerLocations){
-
-        for(Vector2 beeLocation : beesLocations){
-
-            Bee currentBee = (Bee)map[beeLocation.y][beeLocation.x];
-
-            if(currentBee.hasPollen()){ //If bee has pollen. Then GoTowardsHive
-
-                //Get sorted linkedList of next coordinates and all eight directions.
-                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveCoordinates(), beeLocation);
-
-                //Check all 8 directions and take the first available one (first empty cell)
-                for(int i = 0; i < 7; i++){
-
-                    Vector2 coordinate = coordinates.get(i);
-
-                    if(moveBee(new Vector2(beeLocation), new Vector2(coordinate)))
-                        break;
-                }
-            }else{ //GoAwayFromHive
-
-                //If the bees currentHuntDirection is not set. Give it one
-                if(currentBee.getCurrentHuntDirection() == null){
-
-                    //Calculate the direction away from hive, give that to the bee
-                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(currentBee.getHiveCoordinates(), beeLocation).findOppositeDirection());
-                }
-
-                //If bee is # moves from flower, set direction to that way
-                Vector2 nearestFlower = isBeeNearFlower(beeLocation, flowerLocations, Bee.BEE_FLOWER_ALERT_DIST);
-
-                if(nearestFlower != null)
-                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(nearestFlower, beeLocation)); //Get direction of flower, and set that to the be the bees direction
-
-                //Get list of directions in bees desired direction
-                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(new Vector2(beeLocation.x + currentBee.getCurrentHuntDirection().coordinates.x,
-                                                                                                    beeLocation.y + currentBee.getCurrentHuntDirection().coordinates.y),
-                                                                                                        beeLocation);
-
-                //move bee in that direction if possible, or continues on list
-                for(int i = 0; i < 7; i++){
-
-                    Vector2 coordinate = coordinates.get(i);
-
-                    if(moveBee(new Vector2(beeLocation), new Vector2(coordinate)))
-                        break;
-                }
             }
         }
     }
@@ -260,36 +204,58 @@ public class GameClass {
         return null;
     }
 
-    /** Moves the bee. Return true if bee was moved.
-     *  @param myCoords coordinates of the bee to be moved.
-     *  @param destCoords coordinates of the desired destination of the bee.
-     *  @return true if bee was moved. */
-    private boolean moveBee(Vector2 myCoords, Vector2 destCoords){
+    /**
+     *  @param beesLocations an arrayList containing all bee locations.
+     *  @param flowerLocations an arrayList containing all flower locations. */
+    private void moveBees(ArrayList<Vector2> beesLocations, ArrayList<Vector2> flowerLocations){
 
-        try{
-            ////Is destination empty check?
-            if(map[destCoords.y][destCoords.x] instanceof GameStructure){
-                if(!((GameStructure) map[destCoords.y][destCoords.x]).isSolid()){
+        for(Vector2 beeLocation : beesLocations){
 
-                    /* Old section replaced by below code: moves instead of: delete and spawn new
-                    //MOVE
-                    map[destCoords.y][destCoords.x] = new Bee(((Bee)map[myCoords.y][myCoords.x]).getHiveCoordinates().x, ((Bee)map[myCoords.y][myCoords.x]).getHiveCoordinates().y);
-                    if(((Bee)map[myCoords.y][myCoords.x]).hasPollen()) //Keep pollen state
-                        ((Bee)map[destCoords.y][destCoords.x]).givePollen();
-                    //map[myCoords.y][myCoords.x] = new GameStructure(false); //Delete old bee*/
+            Bee currentBee = (Bee)gameMap.getGameObjectFromCoords(beeLocation);
 
-                    Bee targetBee = (Bee)map[myCoords.y][myCoords.x];
-                    map[myCoords.y][myCoords.x] = new GameStructure(false); //Delete old bee
-                    map[destCoords.y][destCoords.x] = targetBee;
+            if(currentBee.hasPollen()){ //If bee has pollen. Then GoTowardsHive
 
-                    return true;
+                //Get sorted linkedList of next coordinates and all eight directions.
+                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(currentBee.getHiveCoordinates(), beeLocation);
+
+                //Check all 8 directions and take the first available one (first empty cell)
+                for(int i = 0; i < 7; i++){
+
+                    Vector2 coordinate = coordinates.get(i);
+
+                    if(gameMap.moveGameObject(beeLocation, coordinate))
+                        break;
+                }
+            }else{ //GoAwayFromHive
+
+                //If the bees currentHuntDirection is not set. Give it one
+                if(currentBee.getCurrentHuntDirection() == null){
+
+                    //Calculate the direction away from hive, give that to the bee
+                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(currentBee.getHiveCoordinates(), beeLocation).findOppositeDirection());
+                }
+
+                //If bee is # moves from flower, set direction to that way
+                Vector2 nearestFlower = isBeeNearFlower(beeLocation, flowerLocations, Bee.BEE_FLOWER_ALERT_DIST);
+
+                if(nearestFlower != null)
+                    currentBee.setCurrentHuntDirection(findDirectionFromCoords(nearestFlower, beeLocation)); //Get direction of flower, and set that to the be the bees direction
+
+                //Get list of directions in bees desired direction
+                LinkedList<Vector2> coordinates = getSortedSetOfDirectionalCoordinates(new Vector2(beeLocation.x + currentBee.getCurrentHuntDirection().coordinates.x,
+                                                                                                    beeLocation.y + currentBee.getCurrentHuntDirection().coordinates.y),
+                                                                                                        beeLocation);
+
+                //move bee in that direction if possible, or continues on list
+                for(int i = 0; i < 7; i++){
+
+                    Vector2 coordinate = coordinates.get(i);
+
+                    if(gameMap.moveGameObject(beeLocation, coordinate))
+                        break;
                 }
             }
-        }catch (ArrayIndexOutOfBoundsException e){ //If request is outside playing field.
-            return false;
         }
-
-        return false;
     }
 
     /** Finds a direction from myCoords to destCoords. */
