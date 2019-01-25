@@ -11,10 +11,6 @@ public class GameMap {
     private int mapWidth;
     private int mapHeight;
 
-    private int beeCount = 0;
-    private int hiveCount = 0;
-    private int flowerCount = 0;
-
     private ArrayList<Vector2> hiveLocations = new ArrayList<Vector2>();
     private ArrayList<Vector2> flowerLocations = new ArrayList<Vector2>();
     private ArrayList<Vector2> beeLocations = new ArrayList<Vector2>();
@@ -37,7 +33,7 @@ public class GameMap {
         //Fill map with game elements
         new SpawnMethods(spawn_type, map);
 
-        updatePacket(map);
+        updatePacket();
     }
 
     /** Initializes the map: creates the border and the empty play space. */
@@ -71,29 +67,64 @@ public class GameMap {
                 if(currentCell instanceof GameStructure) continue;
 
                 if(currentCell instanceof Bee){
-                    beeCount++;
                     beeLocations.add(new Vector2(y, x)); //TODO bug?
                 } else if(currentCell instanceof Hive){
-                    hiveCount++;
                     hiveLocations.add(new Vector2(x, y));
                 } else if(currentCell instanceof Flower){
-                    flowerCount++;
                     flowerLocations.add(new Vector2(x, y));
                 }
             }
         }
     }
 
+
+    //-----------METHODS THAT CHANGE THE MAP-------------
+
+    /** Removes the gameObject on the given (x,y) coordinate.
+     * @param location the coordinates of the involved tile/GameObject.
+     * @return false if the given coordinates corrospond to
+     * either a hive or GameStructure. */
+    public boolean removeGameObject(Vector2 location){
+        GameObject currentObj = map[location.y][location.x];
+
+        if(currentObj instanceof GameStructure)
+            return false;
+        else if(currentObj instanceof Hive)
+            return false;
+        else if(currentObj instanceof Bee){
+
+            beeLocations.remove(location);
+            map[location.y][location.x] = new GameStructure(false);
+
+            //TODO THE BEES SHOULD ALSO BE REMOVE FROM THE HIVE THAT OWNS IT!!
+
+        }else if(currentObj instanceof Queen){
+            //TODO SHOULD THE QUEEN NOT BE REPRESENTED IN ANOTHER CLASS / PLACE?
+            map[location.y][location.x] = new GameStructure(false);
+        }else if(currentObj instanceof Flower){
+            flowerLocations.remove(location);
+            map[location.y][location.x] = new GameStructure(false);
+        }else
+            throw new IllegalStateException("THIS SHOULD NEVER HAVE HAPPENED! GameMap -> removeGameObject"); //THIS SHOULD NEVER HAPPEN!!!
+
+        return true;
+    }
+
+
+    //---------------------------------------------------
+
+
+
     public int getBeeCount() {
-        return beeCount;
+        return getBeeLocations().size();
     }
 
     public int getHiveCount() {
-        return hiveCount;
+        return getHiveLocations().size();
     }
 
     public int getFlowerCount() {
-        return flowerCount;
+        return getFlowerLocations().size();
     }
 
     public ArrayList<Vector2> getHiveLocations() {
