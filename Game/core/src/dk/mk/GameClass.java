@@ -355,10 +355,11 @@ public class GameClass {
         ArrayList<Vector2> gameObjectLocations = new ArrayList<Vector2>();
 
         //Go through map and add all requested GameObject-locations to the array
-        for(int y = 0; y < mapHeight; y++){
-            for(int x = 0; x < mapWidth; x++){
-
-                if(map[y][x].getClass() == gameObject.getClass())
+        for(int y = 0; y < gameMap.getMapHeight(); y++){
+            for(int x = 0; x < gameMap.getMapWidth(); x++){
+                
+                //TODO can be replaced with "instance of"???
+                if(gameMap.getGameObjectFromCoords(new Vector2(x, y)).getClass() == gameObject.getClass())
                     gameObjectLocations.add(new Vector2(x, y));
             }
         }
