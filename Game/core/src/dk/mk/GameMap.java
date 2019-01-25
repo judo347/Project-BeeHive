@@ -84,7 +84,10 @@ public class GameMap {
      * @param location the coordinates of the involved tile/GameObject.
      * @return false if the given coordinates corrospond to a GameStructure. */
     public boolean removeGameObject(Vector2 location){
-        GameObject currentObj = map[location.y][location.x];
+
+        //TODO OUT OF BOUNDS CHECK!!
+
+        GameObject currentObj = getGameObjectFromCoords(location);
 
         if(currentObj instanceof GameStructure)
             return false;
@@ -110,6 +113,35 @@ public class GameMap {
             map[location.y][location.x] = new GameStructure(false);
         }else
             throw new IllegalStateException("THIS SHOULD NEVER HAVE HAPPENED! GameMap -> removeGameObject"); //THIS SHOULD NEVER HAPPEN!!!
+
+        return true;
+    }
+
+    /** Adds the given gameObject to the given location.
+     * @param location the location which is desired for the object.
+     * @param gameObject the object to be added.
+     * @return true if the object could be added. */
+    public boolean addGameObject(Vector2 location, GameObject gameObject){
+
+        //Check the location
+        //TODO OUT OF BOUNDS CHECK!!
+
+        GameObject destinationObject = getGameObjectFromCoords(location);
+
+        if(destinationObject instanceof GameStructure){
+            if(((GameStructure) destinationObject).isSolid())
+                return false; //BORDER HAS BEEN HIT
+        }
+
+        //Add the gameObject
+        map[location.y][location.x] = gameObject;
+
+        if(gameObject instanceof Bee)
+            beeLocations.add(location);
+        else if(gameObject instanceof Flower)
+            flowerLocations.add(location);
+        else if(gameObject instanceof Hive)
+            hiveLocations.add(location);
 
         return true;
     }
