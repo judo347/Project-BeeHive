@@ -82,16 +82,20 @@ public class GameMap {
 
     /** Removes the gameObject on the given (x,y) coordinate.
      * @param location the coordinates of the involved tile/GameObject.
-     * @return false if the given coordinates corrospond to
-     * either a hive or GameStructure. */
+     * @return false if the given coordinates corrospond to a GameStructure. */
     public boolean removeGameObject(Vector2 location){
         GameObject currentObj = map[location.y][location.x];
 
         if(currentObj instanceof GameStructure)
             return false;
-        else if(currentObj instanceof Hive)
-            return false;
-        else if(currentObj instanceof Bee){
+        else if(currentObj instanceof Hive){
+
+            hiveLocations.remove(location);
+            map[location.y][location.x] = new GameStructure(false);
+
+            //TODO WHAT ABOUT QUEENS AND OWNED BEES?
+
+        }else if(currentObj instanceof Bee){
 
             beeLocations.remove(location);
             map[location.y][location.x] = new GameStructure(false);
