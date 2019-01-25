@@ -357,7 +357,7 @@ public class GameClass {
         //Go through map and add all requested GameObject-locations to the array
         for(int y = 0; y < gameMap.getMapHeight(); y++){
             for(int x = 0; x < gameMap.getMapWidth(); x++){
-                
+
                 //TODO can be replaced with "instance of"???
                 if(gameMap.getGameObjectFromCoords(new Vector2(x, y)).getClass() == gameObject.getClass())
                     gameObjectLocations.add(new Vector2(x, y));
@@ -365,22 +365,6 @@ public class GameClass {
         }
 
         return gameObjectLocations;
-    }
-
-    /** Searches the map and returns an arraylist of all bees. */
-    private ArrayList<Bee> getAllBees(){
-
-        ArrayList<Bee> bees = new ArrayList<Bee>();
-
-        for(int y = 0; y < mapHeight; y++){
-            for(int x = 0; x < mapWidth; x++){
-
-                if(map[y][x].getClass() == Bee.class)
-                    bees.add((Bee)map[y][x]);
-            }
-        }
-
-        return bees;
     }
 
     /** @return number of requestedGameObject surrounding given coordinates. */
