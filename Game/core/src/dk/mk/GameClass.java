@@ -57,8 +57,8 @@ public class GameClass {
         gameMap.updatePacket();
 
         //TODO TICK ALL BEES
-        beeTick(gameMap, delta);
         preGameCheck(gameMap);
+        beeTick(gameMap, delta);
         queenRuleCheck(gameMap);
         harvestRuleCheck(gameMap);
     }
@@ -81,7 +81,7 @@ public class GameClass {
 
         //Check the requirement
         if(gtp.getBeeCount() < 2 || gtp.getHiveCount() < 1)
-            throw new IllegalGameStart(gtp.getBeeCount(), gtp.getHiveCount());
+            throw new IllegalGameStart(gtp.getBeeCount(), gtp.getHiveCount()); //TODO this is how the game ends. Handle this differently.
     }
 
     /** Queen rule check: if there is two or more bees near a hive and
