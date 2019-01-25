@@ -146,6 +146,18 @@ public class GameMap {
         return true;
     }
 
+    /** Moves the object from the given location to the given location
+     * @return true if gameObject was moved. */
+    public boolean moveGameObject(Vector2 fromLocation, Vector2 toLocation){
+
+        GameObject objectToBeMoved = getGameObjectFromCoords(fromLocation);
+
+        if(addGameObject(toLocation, objectToBeMoved)){ //TODO does this remove and add the correct ones in arraylist
+            removeGameObject(fromLocation);
+            return true;
+        }else
+            return false;
+    }
 
     //---------------------------------------------------
 
