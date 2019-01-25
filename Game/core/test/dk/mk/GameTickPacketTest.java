@@ -4,9 +4,7 @@ import dk.mk.gameObjects.Hive;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
-public class GameTickPacketTest {
+public class GameMapTest {
 
     /**
      * @Test
@@ -24,8 +22,8 @@ public class GameTickPacketTest {
 
     @Test
     public void counterTest01(){
-        GameMap gameMap = new GameMap(SpawnMethods.SPAWN_TYPE.TESTCOUNTER);
-        GameTickPacket gtp = new GameTickPacket(gameMap.getMap());
+        GameClass gameClass = new GameClass(SpawnMethods.SPAWN_TYPE.TESTCOUNTER);
+        GameMap gtp = new GameMap(gameClass.getMap());
 
         Assert.assertEquals(5, gtp.getBeeCount());
         Assert.assertEquals(5, gtp.getHiveCount());
@@ -34,11 +32,11 @@ public class GameTickPacketTest {
 
     @Test
     public void hiveLocationTypeTest01(){
-        GameMap gameMap = new GameMap(SpawnMethods.SPAWN_TYPE.TESTCOUNTER);
-        GameTickPacket gtp = new GameTickPacket(gameMap.getMap());
+        GameClass gameClass = new GameClass(SpawnMethods.SPAWN_TYPE.TESTCOUNTER);
+        GameMap gtp = new GameMap(gameClass.getMap());
 
         for (Vector2 hiveLocation : gtp.getHiveLocations()) {
-            Assert.assertTrue(gameMap.getMap()[hiveLocation.x][hiveLocation.y] instanceof Hive);
+            Assert.assertTrue(gameClass.getMap()[hiveLocation.x][hiveLocation.y] instanceof Hive);
         }
     }
 }

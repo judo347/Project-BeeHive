@@ -7,7 +7,7 @@ import static dk.mk.GameInfo.TICK_DURATION;
 public class GameScreen implements Screen{
 
     private GdxGame game;
-    private GameMap map;
+    private GameClass map;
 
     private float stateTime;
 
@@ -18,7 +18,7 @@ public class GameScreen implements Screen{
     }
 
     private void initialize(){
-        this.map = new GameMap(SpawnMethods.SPAWN_TYPE.TESTSPAWN);
+        this.map = new GameClass(SpawnMethods.SPAWN_TYPE.TESTSPAWN);
     }
 
     @Override
