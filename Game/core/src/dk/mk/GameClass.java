@@ -88,22 +88,15 @@ public class GameClass {
      *  there is no queen on the way or present at hive. Then create one. */
     private void queenRuleCheck(GameMap gtp){
 
-        ArrayList<Vector2> hives = gtp.getHiveLocations();
-        boolean needUpdate = false;
-
         //Check hives for queen. If no = spawn queen.
-        for(Vector2 hive : hives){
+        for(Vector2 hive : gtp.getHiveLocations()){
             if(checkSurroundings(new Queen(), hive) == 0){ //Check if there is no queen around the hive
                 if(checkSurroundings(new Bee(0,0), hive) >= 2){ //Check if there is at least two bees near hive
                     Vector2 emptyCell = findEmptyCell(hive);  //Find empty cell
-                    map[emptyCell.y][emptyCell.x] = new Queen(); //Spawn queen in empty cell
-                    needUpdate = true; //TODO BUG In theory if hive are too close, this will have to be updated each iteration
+                    gameMap.addGameObject(emptyCell, new Queen()); //Spawn queen in empty cell
                 }
             }
         }
-
-        if(needUpdate)
-            gtp.updatePacket(this.map); //TODO This call could and should be avoid and instead updated from above line.
     }
 
     /** Harvest rule check: if the hive contains a queen, then the bee will choose a psudo random direction and
