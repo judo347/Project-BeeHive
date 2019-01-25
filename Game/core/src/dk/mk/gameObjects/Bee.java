@@ -53,6 +53,10 @@ public class Bee extends GameObject {
         return new Vector2(hiveCoordinates);
     }
 
+    public void setHiveCoordinates(Vector2 hiveCoordinates) {
+        this.hiveCoordinates = hiveCoordinates;
+    }
+
     public boolean hasPollen(){
         return this.hasPollen;
     }

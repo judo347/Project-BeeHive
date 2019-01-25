@@ -1,8 +1,11 @@
 package dk.mk;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.mk.gameObjects.*;
 import dk.mk.SpawnMethods.*;
+import org.omg.CORBA.PRIVATE_MEMBER;
+import sun.dc.pr.PRError;
 
 import java.util.*;
 
@@ -94,7 +97,8 @@ public class GameMap {
         preGameCheck(gameTickPacket);
         queenRuleCheck(gameTickPacket);
         harvestRuleCheck(gameTickPacket);
-        newQueenRuleCheck(gameTickPacket);
+        //newQueenRuleCheck(gameTickPacket);
+        expantionRuleCheck(gameTickPacket);
     }
 
     /** Used to tick the bees: update their lifetime and remove dead bees. */
@@ -192,7 +196,7 @@ public class GameMap {
 
     /** Checks if there is x or more bees belonging to a single give: spawn a second queen.
      * x is taken from the GameInfo class. */
-    private void newQueenRuleCheck(GameTickPacket gtp){
+    /*private void newQueenRuleCheck(GameTickPacket gtp){
 
         ArrayList<Vector2> allHives = gtp.getHiveLocations();
         boolean needUpdate = false;
@@ -209,10 +213,44 @@ public class GameMap {
 
         if(needUpdate)
             gtp.updatePacket(this.map);
-    }
+    }*/
 
     /** Check if there is two queens at a hive, if so the queen and the bees */
     private void twoQueenRuleCheck(GameTickPacket gtp){
+
+    }
+
+    private void expantionRuleCheck(GameTickPacket gtp){
+
+
+        ArrayList<Vector2> allHives = gtp.getHiveLocations();
+        boolean needUpdate = false;
+
+        for (Vector2 hiveLoc : allHives) {
+            Hive hive = (Hive)map[hiveLoc.y][hiveLoc.x];
+            System.out.println(hive.numberOfOwnedBees());
+            if(hive.numberOfOwnedBees() >= GameInfo.MAX_BEES_PER_QUEEN){
+
+                ArrayList<Bee> movingBees = hive.popHalfOfOwnedBees();
+
+                //Find spot for new hive
+                Vector2 newHiveLoc = new Vector2(20, 20); //TODO SHOULD BE DONE IN ANOTHER WAY
+
+                //Move bees towards that.
+                for (Bee movingBee : movingBees) {
+                    movingBee.setHiveCoordinates(newHiveLoc);
+                    movingBee.setCurrentHuntDirection(null);
+                    //TODO Create a mode for the bee when he finds new hive: dont look for flowers, fly hive direction, and stop.
+                }
+
+                needUpdate = true; //TODO BUG In theory if hive are too close, this will have to be updated each iteration
+            }
+        }
+
+        //TODO Should check if bees has arrived and then spawn new hive.
+
+        if(needUpdate)
+            gtp.updatePacket(this.map);
 
     }
 

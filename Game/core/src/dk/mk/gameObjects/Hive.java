@@ -23,8 +23,8 @@ public class Hive extends GameObject {
         int numberOfOwnedBees = numberOfOwnedBees();
 
         for(int i = 0; i <= numberOfOwnedBees/2; i++){
-            half.add(ownedBees.get(ownedBees.size()));
-            ownedBees.remove(ownedBees.get(ownedBees.size()));
+            half.add(ownedBees.get(ownedBees.size()-1));
+            ownedBees.remove(ownedBees.get(ownedBees.size()-1));
         }
 
         //TODO do something about their hiveCoordinates/Direction
