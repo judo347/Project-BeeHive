@@ -328,22 +328,23 @@ public class GameClass {
         int y = coordinates.y;
 
         //Check all surrounding coordinates. If bee found, add to ArrayList
-        if(map[y+1][x].getClass() == Bee.class)
-            bees.add((Bee)map[y+1][x]);
-        if(map[y+1][x+1].getClass() == Bee.class)
-            bees.add((Bee)map[y+1][x+1]);
-        if(map[y][x+1].getClass() == Bee.class)
-            bees.add((Bee)map[y][x+1]);
-        if(map[y-1][x+1].getClass() == Bee.class)
-            bees.add((Bee)map[y-1][x+1]);
-        if(map[y-1][x].getClass() == Bee.class)
-            bees.add((Bee)map[y-1][x]);
-        if(map[y-1][x-1].getClass() == Bee.class)
-            bees.add((Bee)map[y-1][x-1]);
-        if(map[y][x-1].getClass() == Bee.class)
-            bees.add((Bee)map[y][x-1]);
-        if(map[y+1][x-1].getClass() == Bee.class)
-            bees.add((Bee)map[y+1][x-1]);
+        //TODO should this not be replaced with "instance of"????
+        if(gameMap.getGameObjectFromCoords(y+1, x).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y+1, x));
+        if(gameMap.getGameObjectFromCoords(y+1, x+1).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y+1, x+1));
+        if(gameMap.getGameObjectFromCoords(y, x+1).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y, x+1));
+        if(gameMap.getGameObjectFromCoords(y-1, x+1).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y-1, x-1));
+        if(gameMap.getGameObjectFromCoords(y-1, x).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y-1, x));
+        if(gameMap.getGameObjectFromCoords(y-1, x-1).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y-1, x
+        if(gameMap.getGameObjectFromCoords(y, x-1).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y, x-1));
+        if(gameMap.getGameObjectFromCoords(y+1, x-1).getClass() == Bee.class)
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y+1, x-1));
 
         return bees;
     }
