@@ -67,7 +67,7 @@ public class GameMap {
                 if(currentCell instanceof GameStructure) continue;
 
                 if(currentCell instanceof Bee){
-                    beeLocations.add(new Vector2(y, x)); //TODO bug?
+                    beeLocations.add(new Vector2(x, y));
                 } else if(currentCell instanceof Hive){
                     hiveLocations.add(new Vector2(x, y));
                 } else if(currentCell instanceof Flower){
@@ -153,5 +153,9 @@ public class GameMap {
 
     public Texture getTextureFromCoords(int x, int y){
         return map[y][x].getTexture();
+    }
+
+    public GameObject getGameObjectFromCoords(Vector2 location){
+        return map[location.y][location.x];
     }
 }

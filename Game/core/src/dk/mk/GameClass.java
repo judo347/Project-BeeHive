@@ -66,19 +66,14 @@ public class GameClass {
     /** Used to tick the bees: update their lifetime and remove dead bees. */
     private void beeTick(GameMap gtp, float delta){
         ArrayList<Vector2> beeLocations = gtp.getBeeLocations();
-        boolean needUpdate = false;
 
         for (Vector2 beeLocation : beeLocations) {
-            Bee currentBee = (Bee)map[beeLocation.x][beeLocation.y];
+            Bee currentBee = (Bee)gameMap.getGameObjectFromCoords(beeLocation);
             currentBee.updateLifetime(delta);
             if(currentBee.isDead()){
-                map[beeLocation.x][beeLocation.y] = new GameStructure(false);
-                needUpdate = true;
+                gameMap.removeGameObject(beeLocation);
             }
         }
-
-        if(needUpdate)
-            gtp.updatePacket(this.map);
     }
 
     /** The pre-game check: is there at least two bees and one hive? */
