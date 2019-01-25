@@ -37,63 +37,30 @@ public class GameClass {
         }
     }
 
-    private GameObject[][] map;
-    private int mapWidth;
-    private int mapHeight;
+    GameMap gameMap;
 
     public GameClass(SPAWN_TYPE spawn_type) {
+        this.gameMap = new GameMap(spawn_type);
 
-        //Initialize map
-        if(GameInfo.WINDOW_HEIGHT % GameInfo.SQUARE_SIZE != 0 || GameInfo.WINDOW_WIDTH % GameInfo.SQUARE_SIZE != 0)
-            throw new IllegalMapSize();
-        else{
-            this.mapHeight = (GameInfo.WINDOW_HEIGHT / GameInfo.SQUARE_SIZE) - 1;
-            this.mapWidth = (GameInfo.WINDOW_WIDTH / GameInfo.SQUARE_SIZE) - 1;
-        }
-
-        map = new GameObject[mapHeight][mapWidth];
-
-        //Fill map with border + blank
-        initializeBlankBorder();
-
-        //Fill map with game elements
-        new SpawnMethods(spawn_type, map);
-    }
-
-    /** Initializes the map: creates the border and the empty play space. */
-    private void initializeBlankBorder(){
-
-        for(int y = 0; y < mapHeight; y++){
-            for(int x = 0; x < mapWidth; x++){
-
-                if(x == 0 || y == 0){
-                    map[y][x] = new GameStructure(true);
-                }else if(x == mapWidth || y == mapHeight){
-                    map[y][x] = new GameStructure(true);
-                }else{
-                    map[y][x] = new GameStructure(false);
-                }
-            }
-        }
     }
 
     public void render(SpriteBatch batch){
-        for(int y = 0; y < mapHeight; y++){
-            for(int x = 0; x < mapWidth; x++){
-                batch.draw(map[y][x].getTexture(), x * GameInfo.SQUARE_SIZE, y * GameInfo.SQUARE_SIZE, GameInfo.SQUARE_SIZE, GameInfo.SQUARE_SIZE);
+        for(int y = 0; y < gameMap.getMapHeight(); y++){
+            for(int x = 0; x < gameMap.getMapWidth(); x++){
+                batch.draw(gameMap.getTextureFromCoords(x, y), x * GameInfo.SQUARE_SIZE, y * GameInfo.SQUARE_SIZE, GameInfo.SQUARE_SIZE, GameInfo.SQUARE_SIZE);
             }
         }
     }
 
     /** The tick of the game. Calls the rules and progresses the game accordingly. */
     public void tick(float delta){
-        GameMap gameTickPacket = new GameMap(this.map);
+        gameMap.updatePacket();
 
         //TODO TICK ALL BEES
-        beeTick(gameTickPacket, delta);
-        preGameCheck(gameTickPacket);
-        queenRuleCheck(gameTickPacket);
-        harvestRuleCheck(gameTickPacket);
+        beeTick(gameMap, delta);
+        preGameCheck(gameMap);
+        queenRuleCheck(gameMap);
+        harvestRuleCheck(gameMap);
     }
 
     /** Used to tick the bees: update their lifetime and remove dead bees. */
