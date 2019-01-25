@@ -199,6 +199,10 @@ public class GameMap {
         return map[y][x].getTexture();
     }
 
+    public GameObject getGameObjectFromCoords(int x, int y){
+        return getGameObjectFromCoords(new Vector2(x, y));
+    }
+
     public GameObject getGameObjectFromCoords(Vector2 location){
         return map[location.y][location.x];
     }
