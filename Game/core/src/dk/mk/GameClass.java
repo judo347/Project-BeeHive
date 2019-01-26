@@ -341,7 +341,7 @@ public class GameClass {
         if(gameMap.getGameObjectFromCoords(y-1, x).getClass() == Bee.class)
             bees.add((Bee)gameMap.getGameObjectFromCoords(y-1, x));
         if(gameMap.getGameObjectFromCoords(y-1, x-1).getClass() == Bee.class)
-            bees.add((Bee)gameMap.getGameObjectFromCoords(y-1, x
+            bees.add((Bee)gameMap.getGameObjectFromCoords(y-1, x));
         if(gameMap.getGameObjectFromCoords(y, x-1).getClass() == Bee.class)
             bees.add((Bee)gameMap.getGameObjectFromCoords(y, x-1));
         if(gameMap.getGameObjectFromCoords(y+1, x-1).getClass() == Bee.class)
@@ -438,9 +438,5 @@ public class GameClass {
 
             layer++;
         }
-    }
-
-    public GameObject[][] getMap() {
-        return map;
     }
 }
