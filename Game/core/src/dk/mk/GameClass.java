@@ -439,4 +439,8 @@ public class GameClass {
             layer++;
         }
     }
+
+    public GameMap getGameMap() {
+        return gameMap;
+    }
 }

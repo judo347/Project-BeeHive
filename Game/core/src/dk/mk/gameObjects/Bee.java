@@ -28,8 +28,13 @@ public class Bee extends GameObject {
         super("beeNoPollen.png");
         this.hiveCoordinates = hiveCoords;
 
-        this.pollenTexture = new Texture("beePollen.png");
-        this.noPollenTexture = new Texture("beeNoPollen.png");
+        try {
+            this.pollenTexture = new Texture("beePollen.png");
+            this.noPollenTexture = new Texture("beeNoPollen.png");
+
+        } catch (NullPointerException e){
+            System.out.println("BEE TEXTURES COULD NOT BE LOADED!!");
+        }
 
         this.hasPollen = false;
 
