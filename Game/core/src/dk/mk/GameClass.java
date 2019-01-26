@@ -328,6 +328,7 @@ public class GameClass {
         int y = coordinates.y;
 
         //Check all surrounding coordinates. If bee found, add to ArrayList
+        //TODO BUG!!! x and y SHOULD BE SWITCHED!!!
         //TODO should this not be replaced with "instance of"????
         if(gameMap.getGameObjectFromCoords(y+1, x).getClass() == Bee.class)
             bees.add((Bee)gameMap.getGameObjectFromCoords(y+1, x));
@@ -375,20 +376,20 @@ public class GameClass {
         int y = coords.y;
 
         //Get all surrounding cells
-        surroundingCells.add(map[y+1][x]);
-        surroundingCells.add(map[y+1][x+1]);
-        surroundingCells.add(map[y][x+1]);
-        surroundingCells.add(map[y-1][x+1]);
-        surroundingCells.add(map[y-1][x]);
-        surroundingCells.add(map[y-1][x-1]);
-        surroundingCells.add(map[y][x-1]);
-        surroundingCells.add(map[y+1][x-1]);
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x, y+1));
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x + 1,y + 1));
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x + 1, y));
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x + 1, y - 1));
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x, y - 1));
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x - 1, y - 1));
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x - 1, y));
+        surroundingCells.add(gameMap.getGameObjectFromCoords(x - 1, y + 1));
 
         int counter = 0;
 
         //Count surrounding cells containing requested gameObject
         for(GameObject gameObject : surroundingCells)
-            if(gameObject.getClass() == requestedGameObject.getClass())
+            if(gameObject.getClass() == requestedGameObject.getClass()) //TODO "instance of" ??
                 counter++;
 
         return counter;
