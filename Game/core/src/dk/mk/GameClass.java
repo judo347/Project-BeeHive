@@ -403,37 +403,37 @@ public class GameClass {
 
         while(true) {
 
-            if(map[y + layer][x] instanceof GameStructure)
-                if(!((GameStructure)map[y + layer][x]).isSolid())
+            if(gameMap.getGameObjectFromCoords(x, y + layer) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x, y + layer)).isSolid())
                     return new Vector2(x, y + layer);
 
 
-            if (map[y + layer][x + layer] instanceof GameStructure)
-                if(!((GameStructure)map[y + layer][x + layer]).isSolid())
+            if (gameMap.getGameObjectFromCoords(x + layer, y + layer) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x + layer, y + layer)).isSolid())
                     return new Vector2(x + layer, y + layer);
 
-            if (map[y][x + layer] instanceof GameStructure)
-                if(!((GameStructure)map[y][x + layer]).isSolid())
+            if (gameMap.getGameObjectFromCoords(x + layer, y) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x + layer, y)).isSolid())
                     return new Vector2(x + layer, y);
 
-            if (map[y - layer][x + layer] instanceof GameStructure)
-                if(!((GameStructure)map[y - layer][x + layer]).isSolid())
+            if (gameMap.getGameObjectFromCoords(x + layer, y - layer) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x + layer, y - layer)).isSolid())
                     return new Vector2(x + layer, y - layer);
 
-            if (map[y - layer][x] instanceof GameStructure)
-                if(!((GameStructure)map[y - layer][x]).isSolid())
+            if (gameMap.getGameObjectFromCoords(x, y - layer) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x, y - layer)).isSolid())
                     return new Vector2(x, y - layer);
 
-            if (map[y - layer][x - layer] instanceof GameStructure)
-                if(!((GameStructure)map[y - layer][x - layer]).isSolid())
+            if (gameMap.getGameObjectFromCoords(x - layer, y - layer) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x - layer, y - layer)).isSolid())
                     return new Vector2(x - layer, y - layer);
 
-            if (map[y][x - layer] instanceof GameStructure)
-                if(!((GameStructure)map[y][x - layer]).isSolid())
+            if (gameMap.getGameObjectFromCoords(x - layer, y) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x - layer, y)).isSolid())
                     return new Vector2(x - layer, y);
 
-            if (map[y + layer][x - layer] instanceof GameStructure)
-                if(!((GameStructure)map[y + layer][x - layer]).isSolid())
+            if (gameMap.getGameObjectFromCoords(x - layer, y + layer) instanceof GameStructure)
+                if(!((GameStructure)gameMap.getGameObjectFromCoords(x - layer, y + layer)).isSolid())
                     return new Vector2(x - layer, y + layer);
 
             layer++;
