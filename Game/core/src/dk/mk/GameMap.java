@@ -85,7 +85,8 @@ public class GameMap {
      * @return false if the given coordinates corrospond to a GameStructure. */
     public boolean removeGameObject(Vector2 location){
 
-        //TODO OUT OF BOUNDS CHECK!!
+        if(isOutOfBounds(location))
+            return false;
 
         GameObject currentObj = getGameObjectFromCoords(location);
 
@@ -124,7 +125,8 @@ public class GameMap {
     public boolean addGameObject(Vector2 location, GameObject gameObject){
 
         //Check the location
-        //TODO OUT OF BOUNDS CHECK!!
+        if(isOutOfBounds(location))
+            return false;
 
         GameObject destinationObject = getGameObjectFromCoords(location);
 
@@ -161,7 +163,23 @@ public class GameMap {
 
     //---------------------------------------------------
 
+    private boolean isOutOfBounds(int x, int y){
+        return isOutOfBounds(new Vector2(x, y));
+    }
 
+    /** @return true if the given coords is not on the game field. */
+    private boolean isOutOfBounds(Vector2 coords){
+
+        if(coords.x < 0 || coords.x >= mapWidth){
+            return false;
+        }
+
+        if(coords.y < 0 || coords.y >= mapHeight){
+            return false;
+        }
+
+        return true;
+    }
 
     public int getBeeCount() {
         return getBeeLocations().size();
