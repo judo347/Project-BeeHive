@@ -134,15 +134,12 @@ public class GameMapTest {
         GameClass gameClass = new GameClass(SpawnMethods.SPAWN_TYPE.TESTCOUNTER);
         GameMap gameMap = gameClass.getGameMap();
 
-        Vector2 newFlowerLocation = new Vector2(gameMap.getMapWidth() -1,1);
+        Vector2 newFlowerLocation = new Vector2(-1,1);
         Flower newFlower = new Flower();
 
         boolean added = gameMap.addGameObject(newFlowerLocation, newFlower);
 
         Assert.assertFalse(added);
-
-        //Check the coords
-        Assert.assertFalse(gameMap.getGameObjectFromCoords(newFlowerLocation).getClass() == newFlower.getClass());
 
         //Check the count
         Assert.assertEquals(5, gameMap.getFlowerCount());
