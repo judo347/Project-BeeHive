@@ -47,8 +47,8 @@ public class GameMap {
         if(GameInfo.WINDOW_HEIGHT % GameInfo.SQUARE_SIZE != 0 || GameInfo.WINDOW_WIDTH % GameInfo.SQUARE_SIZE != 0)
             throw new IllegalMapSize();
         else{
-            this.mapHeight = (GameInfo.WINDOW_HEIGHT / GameInfo.SQUARE_SIZE) - 1;
-            this.mapWidth = (GameInfo.WINDOW_WIDTH / GameInfo.SQUARE_SIZE) - 1;
+            this.mapHeight = (GameInfo.WINDOW_HEIGHT / GameInfo.SQUARE_SIZE);
+            this.mapWidth = (GameInfo.WINDOW_WIDTH / GameInfo.SQUARE_SIZE);
         }
 
         map = new GameObject[mapHeight][mapWidth];
@@ -68,7 +68,7 @@ public class GameMap {
 
                 if(x == 0 || y == 0){
                     map[y][x] = new GameStructure(true);
-                }else if(x == mapWidth || y == mapHeight){
+                }else if(x == mapWidth - 1 || y == mapHeight - 1){
                     map[y][x] = new GameStructure(true);
                 }else{
                     map[y][x] = new GameStructure(false);
