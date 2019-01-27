@@ -7,7 +7,7 @@ import static dk.mk.GameInfo.TICK_DURATION;
 public class GameScreen implements Screen{
 
     private GdxGame game;
-    private GameClass map;
+    private GameClass gameClass;
 
     private float stateTime;
 
@@ -18,7 +18,7 @@ public class GameScreen implements Screen{
     }
 
     private void initialize(){
-        this.map = new GameClass(SpawnMethods.SPAWN_TYPE.TESTSPAWN);
+        this.gameClass = new GameClass(SpawnMethods.SPAWN_TYPE.TESTSPAWN);
     }
 
     @Override
@@ -30,15 +30,15 @@ public class GameScreen implements Screen{
     public void render(float delta) {
         this.stateTime += delta;
 
-        //Calls the method map.tick() when/every TICK_DURATION has passed.
+        //Calls the method gameClass.tick() when/every TICK_DURATION has passed.
         if(stateTime >= TICK_DURATION){
-            this.map.tick(delta);
+            this.gameClass.tick(delta);
             stateTime -= TICK_DURATION;
         }
 
-        //Render map
+        //Render gameClass
         game.batch.begin();
-        this.map.render(game.batch);
+        this.gameClass.render(game.batch);
         game.batch.end();
     }
 
