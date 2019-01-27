@@ -171,14 +171,14 @@ public class GameMap {
     private boolean isOutOfBounds(Vector2 coords){
 
         if(coords.x < 0 || coords.x >= mapWidth){
-            return false;
+            return true;
         }
 
         if(coords.y < 0 || coords.y >= mapHeight){
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public int getBeeCount() {

@@ -165,4 +165,33 @@ public class GameMapTest {
         Assert.assertTrue(bottomRight.isSolid());
 
     }
+
+    @Test
+    public void moveGameObjectTest01(){
+        GameClass gameClass = new GameClass(SpawnMethods.SPAWN_TYPE.TESTCOUNTER);
+        GameMap map = gameClass.getGameMap();
+
+        Flower flower = new Flower();
+
+        Vector2 firstLocation = new Vector2(10,10);
+        Vector2 secondLocation = new Vector2(10,15);
+
+        Assert.assertEquals(5, map.getFlowerCount());
+
+        boolean added = map.addGameObject(firstLocation, flower);
+
+        Assert.assertTrue(added);
+        Assert.assertTrue(map.getGameObjectFromCoords(firstLocation).getClass() == flower.getClass());
+        Assert.assertEquals(6, map.getFlowerCount());
+
+        //Move
+        map.moveGameObject(firstLocation, secondLocation);
+
+        Assert.assertTrue(map.getGameObjectFromCoords(firstLocation).getClass() == GameStructure.class);
+        Assert.assertTrue(map.getGameObjectFromCoords(secondLocation).getClass() == flower.getClass());
+
+        Assert.assertEquals(6, map.getFlowerCount());
+    }
+
+
 }
