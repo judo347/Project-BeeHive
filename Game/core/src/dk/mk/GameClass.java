@@ -60,7 +60,7 @@ public class GameClass {
         preGameCheck(gameMap);
         beeTick(gameMap, delta);
         queenRuleCheck(gameMap);
-        harvestRuleCheck(gameMap);
+        harvestRuleCheck();
     }
 
     /** Used to tick the bees: update their lifetime and remove dead bees. */
@@ -101,29 +101,22 @@ public class GameClass {
 
     /** Harvest rule check: if the hive contains a queen, then the bee will choose a psudo random direction and
      *  start searching for a flower. When found the bee will harvest it, and return to the hive*/
-    private void harvestRuleCheck(GameMap gtp){
-
-        ArrayList<Vector2> hiveLocations = gtp.getHiveLocations();
-        ArrayList<Vector2> flowerLocations = gtp.getFlowerLocations();
-        ArrayList<Vector2> beeLocations = gtp.getBeeLocations(); //TODO BUG
-        //ArrayList<Vector2> beeLocations = getGameObjectLocations(new Bee(0,0)); //TODO works. Can replace above line
-
+    private void harvestRuleCheck(){
 
         //Does bees near hive have pollen? Then spawn new bee.
-        isBeeWithPollenNearHiveEqualsSpawn(hiveLocations);
+        isBeeWithPollenNearHiveEqualsSpawn();
 
         //Is bee near flower? Give bee pollen.
-        isBeeWithPollenNearFlowerGivePollen(flowerLocations);
+        isBeeWithPollenNearFlowerGivePollen();
 
         //AT THIS POINT: BEES HAVE GIVEN OR RECEIVED POLLEN. ITS NOW TIME TO MOVE.
-        moveBees(beeLocations, flowerLocations);
+        moveBees();
     }
 
-    /** Checks if a bee near a hive has pollen. If true remove pollen and spawn new bee.
-     *  @param hiveLocations an arrayList containing hive locations. */
-    private void isBeeWithPollenNearHiveEqualsSpawn(ArrayList<Vector2> hiveLocations){
+    /** Checks if a bee near a hive has pollen. If true remove pollen and spawn new bee. */
+    private void isBeeWithPollenNearHiveEqualsSpawn(){
 
-        for(Vector2 hiveCoords : hiveLocations){
+        for(Vector2 hiveCoords : gameMap.getHiveLocations()){
             ArrayList<Bee> beesAroundHive = getBeesInProximityCoordinate(hiveCoords); //Get arrayList of bees around current hive
 
             //Check all bees around the current hive for pollen.
@@ -141,11 +134,10 @@ public class GameClass {
         }
     }
 
-    /** Checks if a bee is near a flower. If true give pollen to bee.
-     *  @param flowerLocations an arrayList containing flower locations. */
-    private void isBeeWithPollenNearFlowerGivePollen(ArrayList<Vector2> flowerLocations){
+    /** Checks if a bee is near a flower. If true give pollen to bee. */
+    private void isBeeWithPollenNearFlowerGivePollen(){
 
-        for(Vector2 flowerCoords : flowerLocations){
+        for(Vector2 flowerCoords : gameMap.getFlowerLocations()){
             ArrayList<Bee> beesAroundFlower = getBeesInProximityCoordinate(flowerCoords); //Get bees around flower.
 
             //Give pollen to all bees around current flower.
@@ -204,12 +196,10 @@ public class GameClass {
         return null;
     }
 
-    /**
-     *  @param beesLocations an arrayList containing all bee locations.
-     *  @param flowerLocations an arrayList containing all flower locations. */
-    private void moveBees(ArrayList<Vector2> beesLocations, ArrayList<Vector2> flowerLocations){
+    /** Moves the bees. */
+    private void moveBees(){
 
-        for(Vector2 beeLocation : beesLocations){
+        for(Vector2 beeLocation : gameMap.getBeeLocations()){
 
             Bee currentBee = (Bee)gameMap.getGameObjectFromCoords(beeLocation);
 
@@ -236,7 +226,7 @@ public class GameClass {
                 }
 
                 //If bee is # moves from flower, set direction to that way
-                Vector2 nearestFlower = isBeeNearFlower(beeLocation, flowerLocations, Bee.BEE_FLOWER_ALERT_DIST);
+                Vector2 nearestFlower = isBeeNearFlower(beeLocation, gameMap.getFlowerLocations(), Bee.BEE_FLOWER_ALERT_DIST);
 
                 if(nearestFlower != null)
                     currentBee.setCurrentHuntDirection(findDirectionFromCoords(nearestFlower, beeLocation)); //Get direction of flower, and set that to the be the bees direction
