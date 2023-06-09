@@ -1,7 +1,7 @@
 package dk.mk.bee;
 
-import dk.mk.bee.config.VisualInfo;
-import dk.mk.bee.scenes.SceneLoader;
+import dk.mk.bee.ui.config.VisualInfo;
+import dk.mk.bee.ui.scenes.SceneLoader;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -16,7 +16,7 @@ public class GameWindow extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle(VisualInfo.TITLE);
 
-        Scene scene = new Scene(new StackPane(), VisualInfo.WINDOW_WIDTH, VisualInfo.WINDOW_HEIGHT);
+        Scene scene = new Scene(new StackPane(), VisualInfo.WINDOW_WIDTH(), VisualInfo.WINDOW_HEIGHT());
         primaryStage.setScene(scene);
 
         sceneLoader = new SceneLoader();

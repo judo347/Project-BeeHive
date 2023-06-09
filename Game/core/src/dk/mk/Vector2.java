@@ -1,5 +1,6 @@
 package dk.mk;
 
+//TODO THIS CLASS HAS BEEN COPIED!
 public class Vector2 {
 
     public int x;

@@ -1,11 +1,7 @@
-package dk.mk.bee.scenes;
+package dk.mk.bee.ui.scenes;
 
-import dk.mk.bee.config.GameInfo;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -37,7 +33,7 @@ public class MainMenuScene { //TODO rename to content or something?
     public void setNavigationButtons(Scene scene) {
         buttonOptionsManuNavigation.setOnAction(e -> scene.setRoot(optionsMenuScene.getContent()));
         buttonExitNavigation.setOnAction(e -> ((Stage)scene.getWindow()).close());
-        buttonStartGameNavigation.setOnAction(e -> scene.setRoot(gameScene.getContent()));
+        buttonStartGameNavigation.setOnAction(e -> {scene.setRoot(gameScene.getContent()); gameScene.gameLoop();});
         optionsMenuScene.setNavigationButtons(scene, content);
         gameScene.setNavigationButtons(scene, getContent());
     }

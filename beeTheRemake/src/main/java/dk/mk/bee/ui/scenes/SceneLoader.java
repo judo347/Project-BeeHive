@@ -1,8 +1,7 @@
-package dk.mk.bee.scenes;
+package dk.mk.bee.ui.scenes;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class SceneLoader {
 

@@ -1,5 +1,6 @@
 package dk.mk;
 
+//+
 public class IllegalGameStart extends RuntimeException {
 
     public IllegalGameStart(int beeCount, int hiveCount) {

@@ -1,26 +1,26 @@
-package dk.mk.bee.scenes;
+package dk.mk.bee.ui.scenes;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
-public class GameScene { //TODO rename to content or something?
+public class OptionsMenuScene { //TODO rename to content or something?
 
     private StackPane content;
-    private Button buttonToMainMenuNavigation;
+    private Button buttonBackNavigation;
 
-    public GameScene() {
+    public OptionsMenuScene() {
         this.content = sceneContent();
     }
 
     public StackPane sceneContent() {
-        buttonToMainMenuNavigation = new Button("Back to main menu");
-        StackPane layout = new StackPane(buttonToMainMenuNavigation);
+        buttonBackNavigation = new Button("Back to Main Menu");
+        StackPane layout = new StackPane(buttonBackNavigation);
         return layout;
     }
 
     public void setNavigationButtons(Scene scene, StackPane mainManuPane) {
-        buttonToMainMenuNavigation.setOnAction(e -> scene.setRoot(mainManuPane));
+        buttonBackNavigation.setOnAction(e -> scene.setRoot(mainManuPane));
     }
 
     public StackPane getContent() {

@@ -1,5 +1,6 @@
 package dk.mk.gameObjects;
 
+//+
 public class GameStructure extends GameObject {
 
     private boolean isSolid; //Used to determine border or empty space

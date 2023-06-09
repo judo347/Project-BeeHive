@@ -1,5 +1,6 @@
 package dk.mk;
 
+//+
 public class IllegalMapSize extends RuntimeException {
 
     public IllegalMapSize() {
