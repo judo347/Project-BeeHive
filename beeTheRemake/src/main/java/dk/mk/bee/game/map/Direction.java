@@ -16,7 +16,7 @@ public enum Direction{
     }
 
     public Vector2 getCoordinates() {
-        return coordinates;
+        return new Vector2(coordinates.x(), coordinates.y());
     }
 
     public static LinkedList<Direction> getLinkedList(){
@@ -24,7 +24,6 @@ public enum Direction{
     }
 
     public Direction findOppositeDirection(){
-
         for(Direction newDirection : Direction.values()){
             if((newDirection.coordinates.x() * -1) == this.coordinates.x() && (newDirection.coordinates.y() * -1) == this.coordinates.y())
                 return newDirection;

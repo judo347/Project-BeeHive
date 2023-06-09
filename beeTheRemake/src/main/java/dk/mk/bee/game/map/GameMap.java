@@ -3,6 +3,7 @@ package dk.mk.bee.game.map;
 import dk.mk.bee.config.Logger;
 import dk.mk.bee.game.config.GameInfo;
 import dk.mk.bee.game.exception.IllegalMapSize;
+import dk.mk.bee.game.objects.GameObject;
 import dk.mk.bee.ui.config.VisualInfo;
 
 public class GameMap {

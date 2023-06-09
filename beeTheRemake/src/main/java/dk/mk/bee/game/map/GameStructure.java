@@ -1,6 +1,7 @@
 package dk.mk.bee.game.map;
 
-import dk.mk.bee.TileType;
+import dk.mk.bee.game.objects.tile.TileType;
+import dk.mk.bee.game.objects.GameObject;
 
 public class GameStructure extends GameObject {
 

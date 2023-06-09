@@ -1,36 +1,31 @@
-package dk.mk.gameObjects;
+package dk.mk.bee.game.objects.bees;
 
-import com.badlogic.gdx.graphics.Texture;
-import dk.mk.GameInfo;
-import dk.mk.GameMap;
-import dk.mk.Vector2;
+import dk.mk.bee.game.config.GameInfo;
+import dk.mk.bee.game.map.Direction;
+import dk.mk.bee.game.objects.GameObject;
+import dk.mk.bee.game.util.Vector2;
 
-//+
+
 public class Bee extends GameObject {
-
-    private Texture pollenTexture;
-    private Texture noPollenTexture;
-
+    private final BeeType type;
     private float lifetime;
     private boolean isDead;
 
     private boolean  hasPollen;
-    private Vector2 hiveCoordinates;
-    private GameMap.Direction currentHuntDirection;
+    private Vector2 hiveCoordinates; //The hive the bee belongs too - home
+    private Direction currentHuntDirection;
 
     //Dictates the distance the bee can sense a flower. Measurement is in-game tiles.
-    public static final int BEE_FLOWER_ALERT_DIST = GameInfo.BEE_FLOWER_ALERT_DIST;
+    public static final int BEE_FLOWER_ALERT_DIST = GameInfo.BEE_FLOWER_ALERT_DIST();
 
-    public Bee(int hiveX, int hiveY){
-        this(new Vector2(hiveX, hiveY));
+    public Bee(int hiveX, int hiveY, BeeType type){
+        this(new Vector2(hiveX, hiveY), type);
     }
 
-    public Bee(Vector2 hiveCoords) {
-        super("beeNoPollen.png");
-        this.hiveCoordinates = hiveCoords;
-
-        this.pollenTexture = new Texture("beePollen.png");
-        this.noPollenTexture = new Texture("beeNoPollen.png");
+    public Bee(Vector2 hiveCoordinates, BeeType type) {
+        super(type.GAME_OBJECT_IDENTIFIER);
+        this.type = type;
+        this.hiveCoordinates = hiveCoordinates;
 
         this.hasPollen = false;
 
@@ -46,12 +41,12 @@ public class Bee extends GameObject {
         //System.out.println(lifetime);
         lifetime += delta;
         //System.out.println(this.toString() + " " + lifetime + " " + delta);
-        if(lifetime >= GameInfo.BEE_LIFETIME)
+        if(lifetime >= GameInfo.BEE_LIFETIME())
             this.isDead = true;
     }
 
     public Vector2 getHiveCoordinates() {
-        return new Vector2(hiveCoordinates);
+        return new Vector2(hiveCoordinates.x(), hiveCoordinates.y());
     }
 
     public boolean hasPollen(){
@@ -64,21 +59,22 @@ public class Bee extends GameObject {
 
     public void removePollen(){
         this.hasPollen = false;
-        this.currentHuntDirection = null; //Reset direction when pollen is harvested = it found home
+        this.currentHuntDirection = null; //Reset direction when pollen is harvested = it found home/hive
     }
 
-    public GameMap.Direction getCurrentHuntDirection() {
+    public Direction getCurrentHuntDirection() {
         return currentHuntDirection;
     }
 
-    public void setCurrentHuntDirection(GameMap.Direction currentHuntDirection) {
+    public void setCurrentHuntDirection(Direction currentHuntDirection) {
         this.currentHuntDirection = currentHuntDirection;
     }
 
+    /* //TODO should not be here. Should be calculated in visual part based on boolean values in this class
     @Override
     public Texture getTexture() {
         return hasPollen ? pollenTexture : noPollenTexture;
-    }
+    } */
 
     public boolean isDead() {
         return isDead;
