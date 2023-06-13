@@ -1,8 +1,9 @@
-package dk.mk.bee.game.objects.bees;
+package dk.mk.bee.game.objects.beespecies;
 
 import dk.mk.bee.game.config.GameInfo;
 import dk.mk.bee.game.map.Direction;
 import dk.mk.bee.game.objects.GameObject;
+import dk.mk.bee.game.objects.beespecies.template.type.BeeType;
 import dk.mk.bee.game.util.Vector2;
 
 

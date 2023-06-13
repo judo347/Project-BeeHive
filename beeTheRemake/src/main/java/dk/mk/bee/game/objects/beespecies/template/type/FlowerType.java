@@ -1,4 +1,4 @@
-package dk.mk.bee.game.objects.flower;
+package dk.mk.bee.game.objects.beespecies.template.type;
 
 public enum FlowerType {
     DEFAULT("flower_default_variant");

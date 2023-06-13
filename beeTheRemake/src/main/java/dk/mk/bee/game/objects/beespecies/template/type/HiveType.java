@@ -1,4 +1,4 @@
-package dk.mk.bee.game.objects.hive;
+package dk.mk.bee.game.objects.beespecies.template.type;
 
 public enum HiveType {
     DEFAULT("hive_default_variant");

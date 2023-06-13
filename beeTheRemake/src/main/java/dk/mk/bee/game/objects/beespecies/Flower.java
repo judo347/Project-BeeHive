@@ -1,6 +1,7 @@
-package dk.mk.bee.game.objects.flower;
+package dk.mk.bee.game.objects.beespecies;
 
 import dk.mk.bee.game.objects.GameObject;
+import dk.mk.bee.game.objects.beespecies.template.type.FlowerType;
 
 public class Flower extends GameObject {
 

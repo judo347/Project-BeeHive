@@ -9,4 +9,8 @@ public class Tile extends GameObject {
         super(type.GAME_OBJECT_IDENTIFIER);
         this.type = type;
     }
+
+    public TileType getType() {
+        return type;
+    }
 }

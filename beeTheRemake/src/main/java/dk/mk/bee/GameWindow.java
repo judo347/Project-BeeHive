@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-//How to run: use the maven plugin and run task: "javafx:run"
+
 public class GameWindow extends Application {
 
     private SceneLoader sceneLoader;

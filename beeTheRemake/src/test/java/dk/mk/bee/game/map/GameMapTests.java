@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class GameMapTests {
@@ -91,6 +89,11 @@ class GameMapTests {
                 assertTrue(((GameStructure) map.map()[3][4]).isSolid());
                 assertTrue(((GameStructure) map.map()[4][4]).isSolid());
                 assertTrue(((GameStructure) map.map()[5][4]).isSolid());
+
+                assertFalse(((GameStructure) map.map()[1][1]).isSolid());
+                assertFalse(((GameStructure) map.map()[1][3]).isSolid());
+                assertFalse(((GameStructure) map.map()[5][1]).isSolid());
+                assertFalse(((GameStructure) map.map()[5][3]).isSolid());
             }
         }
     }

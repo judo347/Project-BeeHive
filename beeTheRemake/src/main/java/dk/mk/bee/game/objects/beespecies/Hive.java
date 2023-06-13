@@ -1,7 +1,7 @@
-package dk.mk.bee.game.objects.hive;
+package dk.mk.bee.game.objects.beespecies;
 
 import dk.mk.bee.game.objects.GameObject;
-import dk.mk.bee.game.objects.bees.Bee;
+import dk.mk.bee.game.objects.beespecies.template.type.HiveType;
 
 import java.util.ArrayList;
 
