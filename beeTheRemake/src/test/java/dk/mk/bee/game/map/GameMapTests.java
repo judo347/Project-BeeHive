@@ -2,6 +2,7 @@ package dk.mk.bee.game.map;
 
 import dk.mk.bee.game.config.GameInfo;
 import dk.mk.bee.game.exception.IllegalMapSize;
+import dk.mk.bee.game.objects.tile.Tile;
 import dk.mk.bee.ui.config.VisualInfo;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -66,34 +67,34 @@ class GameMapTests {
 
                 GameMap map = new GameMap();
 
-                assertTrue(((GameStructure) map.map()[0][0]).isSolid());
-                assertTrue(((GameStructure) map.map()[0][1]).isSolid());
-                assertTrue(((GameStructure) map.map()[0][2]).isSolid());
-                assertTrue(((GameStructure) map.map()[0][3]).isSolid());
-                assertTrue(((GameStructure) map.map()[0][4]).isSolid());
+                assertTrue(((Tile) map.map()[0][0]).isSolid());
+                assertTrue(((Tile) map.map()[0][1]).isSolid());
+                assertTrue(((Tile) map.map()[0][2]).isSolid());
+                assertTrue(((Tile) map.map()[0][3]).isSolid());
+                assertTrue(((Tile) map.map()[0][4]).isSolid());
 
-                assertTrue(((GameStructure) map.map()[6][0]).isSolid());
-                assertTrue(((GameStructure) map.map()[6][1]).isSolid());
-                assertTrue(((GameStructure) map.map()[6][2]).isSolid());
-                assertTrue(((GameStructure) map.map()[6][3]).isSolid());
-                assertTrue(((GameStructure) map.map()[6][4]).isSolid());
+                assertTrue(((Tile) map.map()[6][0]).isSolid());
+                assertTrue(((Tile) map.map()[6][1]).isSolid());
+                assertTrue(((Tile) map.map()[6][2]).isSolid());
+                assertTrue(((Tile) map.map()[6][3]).isSolid());
+                assertTrue(((Tile) map.map()[6][4]).isSolid());
 
-                assertTrue(((GameStructure) map.map()[1][0]).isSolid());
-                assertTrue(((GameStructure) map.map()[2][0]).isSolid());
-                assertTrue(((GameStructure) map.map()[3][0]).isSolid());
-                assertTrue(((GameStructure) map.map()[4][0]).isSolid());
-                assertTrue(((GameStructure) map.map()[5][0]).isSolid());
+                assertTrue(((Tile) map.map()[1][0]).isSolid());
+                assertTrue(((Tile) map.map()[2][0]).isSolid());
+                assertTrue(((Tile) map.map()[3][0]).isSolid());
+                assertTrue(((Tile) map.map()[4][0]).isSolid());
+                assertTrue(((Tile) map.map()[5][0]).isSolid());
 
-                assertTrue(((GameStructure) map.map()[1][4]).isSolid());
-                assertTrue(((GameStructure) map.map()[2][4]).isSolid());
-                assertTrue(((GameStructure) map.map()[3][4]).isSolid());
-                assertTrue(((GameStructure) map.map()[4][4]).isSolid());
-                assertTrue(((GameStructure) map.map()[5][4]).isSolid());
+                assertTrue(((Tile) map.map()[1][4]).isSolid());
+                assertTrue(((Tile) map.map()[2][4]).isSolid());
+                assertTrue(((Tile) map.map()[3][4]).isSolid());
+                assertTrue(((Tile) map.map()[4][4]).isSolid());
+                assertTrue(((Tile) map.map()[5][4]).isSolid());
 
-                assertFalse(((GameStructure) map.map()[1][1]).isSolid());
-                assertFalse(((GameStructure) map.map()[1][3]).isSolid());
-                assertFalse(((GameStructure) map.map()[5][1]).isSolid());
-                assertFalse(((GameStructure) map.map()[5][3]).isSolid());
+                assertFalse(((Tile) map.map()[1][1]).isSolid());
+                assertFalse(((Tile) map.map()[1][3]).isSolid());
+                assertFalse(((Tile) map.map()[5][1]).isSolid());
+                assertFalse(((Tile) map.map()[5][3]).isSolid());
             }
         }
     }

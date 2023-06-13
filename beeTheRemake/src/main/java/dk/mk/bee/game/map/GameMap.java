@@ -4,6 +4,8 @@ import dk.mk.bee.config.Logger;
 import dk.mk.bee.game.config.GameInfo;
 import dk.mk.bee.game.exception.IllegalMapSize;
 import dk.mk.bee.game.objects.GameObject;
+import dk.mk.bee.game.objects.tile.Tile;
+import dk.mk.bee.game.objects.tile.TileType;
 import dk.mk.bee.ui.config.VisualInfo;
 
 public class GameMap {
@@ -33,11 +35,11 @@ public class GameMap {
             for (int x = 0; x < mapWidth; x++) {
 
                 if (x == 0 || y == 0) {
-                    map[y][x] = new GameStructure(true);
+                    map[y][x] = new Tile(TileType.BORDER);
                 } else if (x == mapWidth-1 || y == mapHeight-1) { //TODO look into what it is reporting
-                    map[y][x] = new GameStructure(true);
+                    map[y][x] = new Tile(TileType.BORDER);
                 } else {
-                    map[y][x] = new GameStructure(false);
+                    map[y][x] = new Tile(TileType.WHITESPACE);
                 }
             }
         }

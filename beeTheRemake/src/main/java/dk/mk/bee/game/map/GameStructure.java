@@ -4,6 +4,7 @@ import dk.mk.bee.game.objects.tile.TileType;
 import dk.mk.bee.game.objects.GameObject;
 
 //TODO should be replaced with Tile
+@Deprecated
 public class GameStructure extends GameObject {
 
     private final boolean isSolid; //Used to determine border or empty space

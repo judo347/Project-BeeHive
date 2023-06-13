@@ -13,4 +13,8 @@ public class Tile extends GameObject {
     public TileType getType() {
         return type;
     }
+
+    public boolean isSolid() {
+        return type.IS_SOLID;
+    }
 }
