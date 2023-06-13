@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 //TODO may be deleted
+@Deprecated
 public class OldGameScene { //TODO rename to content or something?
 
     private StackPane content;

@@ -3,6 +3,7 @@ package dk.mk.bee.util;
 import dk.mk.bee.game.config.GameInfo;
 import dk.mk.bee.ui.config.VisualInfo;
 
+@Deprecated
 public class MapUtils {
     /* //TODO should be able to be deleted
     public static int getTileMapHeight() {

@@ -9,6 +9,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 //TODO may be deleted
+@Deprecated
 public class TickBasedGame extends Application {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
