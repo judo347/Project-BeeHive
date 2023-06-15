@@ -1,4 +1,4 @@
-package dk.mk.bee.game.objects.tile;
+package dk.mk.bee.game.objects.beespecies.template.tile;
 
 public enum TileType {
     BORDER("tile_border", true), WHITESPACE("tile_whitespace", false);

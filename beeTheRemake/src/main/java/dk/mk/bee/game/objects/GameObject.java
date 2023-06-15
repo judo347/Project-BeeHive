@@ -14,4 +14,6 @@ public abstract class GameObject {
     public String getIdentifier() {
         return identifier;
     }
+
+    public abstract void tick(float delta);
 }

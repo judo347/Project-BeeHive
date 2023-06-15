@@ -2,7 +2,7 @@ package dk.mk.bee.game.map;
 
 import dk.mk.bee.game.config.GameInfo;
 import dk.mk.bee.game.exception.IllegalMapSize;
-import dk.mk.bee.game.objects.tile.Tile;
+import dk.mk.bee.game.objects.beespecies.template.tile.Tile;
 import dk.mk.bee.ui.config.VisualInfo;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

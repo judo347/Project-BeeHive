@@ -1,4 +1,4 @@
-package dk.mk.bee.game.objects.tile;
+package dk.mk.bee.game.objects.beespecies.template.tile;
 
 import dk.mk.bee.game.objects.GameObject;
 
@@ -16,5 +16,10 @@ public class Tile extends GameObject {
 
     public boolean isSolid() {
         return type.IS_SOLID;
+    }
+
+    @Override
+    public void tick(float delta) {
+        //Nothing
     }
 }

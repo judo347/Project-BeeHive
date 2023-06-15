@@ -4,8 +4,8 @@ import dk.mk.bee.config.Logger;
 import dk.mk.bee.game.config.GameInfo;
 import dk.mk.bee.game.exception.IllegalMapSize;
 import dk.mk.bee.game.objects.GameObject;
-import dk.mk.bee.game.objects.tile.Tile;
-import dk.mk.bee.game.objects.tile.TileType;
+import dk.mk.bee.game.objects.beespecies.template.tile.Tile;
+import dk.mk.bee.game.objects.beespecies.template.tile.TileType;
 import dk.mk.bee.ui.config.VisualInfo;
 
 public class GameMap {

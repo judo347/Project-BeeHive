@@ -3,7 +3,7 @@ package dk.mk.bee;
 import dk.mk.bee.config.Debug;
 import dk.mk.bee.config.Logger;
 import dk.mk.bee.game.map.GameMap;
-import dk.mk.bee.game.objects.tile.Tile;
+import dk.mk.bee.game.objects.beespecies.template.tile.Tile;
 import dk.mk.bee.ui.config.VisualInfo;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

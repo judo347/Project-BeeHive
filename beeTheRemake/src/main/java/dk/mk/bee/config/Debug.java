@@ -1,7 +1,7 @@
 package dk.mk.bee.config;
 
 import dk.mk.bee.game.objects.GameObject;
-import dk.mk.bee.game.objects.tile.Tile;
+import dk.mk.bee.game.objects.beespecies.template.tile.Tile;
 
 public class Debug {
     public static void debugLogGameObject(GameObject gameObject) {
